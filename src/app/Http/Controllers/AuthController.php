@@ -2,63 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function loginForm()
     {
-        //
+        $data = [
+            'title' => 'Login | E-Procurement'
+        ];
+
+        return view('auth/login', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function login(Request $req)
     {
-        //
+        $validData = $req->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if(Auth::attempt($validData)) {
+            return redirect()->intended('dashboard');
+        }
+
+        return redirect()->back()->withErrors(['error' => 'Email or password incorrect']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function logout(Request $req)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        Auth::logout();
+        return redirect()->route('login');
     }
 }
