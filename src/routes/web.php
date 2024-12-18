@@ -3,13 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RedisController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SupplierController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login.form');
