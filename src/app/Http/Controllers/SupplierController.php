@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -11,7 +12,14 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        //
+        $suppliers = Supplier::all();
+
+        $data = [
+            'title' => 'Supplier | E-Procurement',
+            'suppliers' => $suppliers,
+        ];
+
+        return view('dashboard.supplier.index', $data);
     }
 
     /**
@@ -19,7 +27,11 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        $data = [
+            'title' => 'Supplier | E-Procurement',
+        ];
+
+        return view('dashboard.supplier.create', $data);
     }
 
     /**
@@ -27,7 +39,16 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validData = $request->validate([
+            'name' => 'required',
+            'contact' => 'required',
+            'address' => 'required',
+            'rating' => 'required',
+        ]);
+
+        Supplier::create($validData);
+
+        return redirect()->route('suppliers.index');
     }
 
     /**
@@ -35,7 +56,14 @@ class SupplierController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $supplier = Supplier::find($id);
+
+        $data = [
+            'title' => 'Supplier | E-Procurement',
+            'supplier' => $supplier
+        ];
+
+        return view('dashboard.supplier.detail', $data);
     }
 
     /**
@@ -43,7 +71,14 @@ class SupplierController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $supplier = Supplier::find($id);
+
+        $data = [
+            'title' => 'Supplier | E-Procurement',
+            'supplier' => $supplier
+        ];
+
+        return view('dashboard.supplier.edit', $data);
     }
 
     /**
@@ -51,7 +86,17 @@ class SupplierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $supplier = Supplier::find($id);
+        $validData = $request->validate([
+            'name' => 'required',
+            'contact' => 'required',
+            'address' => 'required',
+            'rating' => 'required',
+        ]);
+
+        $supplier->update($validData);
+
+        return redirect()->route('suppliers.index');
     }
 
     /**
@@ -59,6 +104,10 @@ class SupplierController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $supplier = Supplier::find($id);
+
+        $supplier->delete();
+     
+        return redirect()->route('suppliers.index');
     }
 }
