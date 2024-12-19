@@ -7,26 +7,33 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SupplierController;
 
 // Authentication Routes
-Route::get('/login', [AuthController::class, 'loginForm'])->name('login.form');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-Route::middleware(['role:staff|admin'])->group(function() {
-    // Request Management
-    Route::resource('requests', RequestController::class);
+Route::prefix('auth')->group(function() {
+    Route::get('login', [AuthController::class, 'loginForm'])->name('login.form');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::middleware(['role:admin'])->group(function() {
-    // Approval Routes
-    Route::put('/requests/{id}/approve', [RequestController::class, 'approve'])->name('requests.approve');
-    Route::put('/requests/{id}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+Route::prefix('dashboard')->group(function() { 
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Supplier Management Routes
-    Route::resource('suppliers', SupplierController::class);
+    Route::middleware(['role:staff|admin'])->group(function() {
+        // Request Management
+        Route::resource('requests', RequestController::class);
+    });
     
-    // Export
-    Route::get('/reports/export', [RequestController::class, 'export'])->name('reports.export');
+    Route::middleware(['role:admin'])->group(function() {
+        // Approval Routes
+        Route::put('/requests/{id}/approve', [RequestController::class, 'approve'])->name('requests.approve');
+        Route::put('/requests/{id}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+        
+        // Supplier Management Routes
+        Route::resource('suppliers', SupplierController::class);
+    
+        // Users Management Routes
+        Route::resource('users', SupplierController::class);
+        
+        // Export
+        Route::get('/reports/export', [RequestController::class, 'export'])->name('reports.export');
+    });
 });

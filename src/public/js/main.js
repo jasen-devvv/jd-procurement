@@ -6,10 +6,6 @@
 * License: https://bootstrapmade.com/license/
 */
 
-document.addEventListener('DOMContentLoaded', function() {
-  
-})
-
 (function() {
   "use strict";
 
