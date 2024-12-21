@@ -40,10 +40,9 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $validData = $request->validate([
-            'name' => 'required',
-            'contact' => 'required',
-            'address' => 'required',
-            'rating' => 'required',
+            'name' => 'required|string',
+            'contact' => 'required|string',
+            'address' => 'required|string',
         ]);
 
         Supplier::create($validData);
@@ -56,7 +55,7 @@ class SupplierController extends Controller
      */
     public function show(string $id)
     {
-        $supplier = Supplier::find($id);
+        $supplier = Supplier::findOrFail($id);
 
         $data = [
             'title' => 'Supplier | E-Procurement',
@@ -87,11 +86,11 @@ class SupplierController extends Controller
     public function update(Request $request, string $id)
     {
         $supplier = Supplier::find($id);
+
         $validData = $request->validate([
-            'name' => 'required',
-            'contact' => 'required',
-            'address' => 'required',
-            'rating' => 'required',
+            'name' => 'required|string',
+            'contact' => 'required|string',
+            'address' => 'required|string',
         ]);
 
         $supplier->update($validData);
