@@ -17,9 +17,9 @@ class AuthController extends Controller
         return view('auth/login', $data);
     }
 
-    public function login(Request $req)
+    public function login(Request $request)
     {
-        $validData = $req->validate([
+        $validData = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
@@ -31,7 +31,7 @@ class AuthController extends Controller
         return redirect()->back()->withErrors(['error' => 'Email or password incorrect']);
     }
 
-    public function logout(Request $req)
+    public function logout(Request $request)
     {
         Auth::logout();
         return redirect()->route('login');

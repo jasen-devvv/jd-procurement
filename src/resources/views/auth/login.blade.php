@@ -25,13 +25,13 @@
                     <p class="text-center small opacity-75">Enter your email & password to login</p>
                   </div>
 
-                  <form class="row g-3 needs-validation @if($errors->any()) was-validated" @endif action="{{ route('login') }}" method="POST" novalidate>
+                  <form class="row g-3 needs-validation @if($errors->any()) was-validated @endif" action="{{ route('login') }}" method="POST" novalidate>
                     @csrf
                     <div class="col-12">
                       <label for="email" class="form-label">Email</label>
                       <div class="input-group @error('email') has-validation @enderror">
                         <span class="input-group-text" id="emailGroup"><i class="bi bi-envelope-fill"></i></span>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="enter your email" required>
+                        <input type="email" name="email" class="form-control" value="{{ old('email') }}" id="email" placeholder="enter your email" required>
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

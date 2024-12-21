@@ -12,21 +12,28 @@
       <li class="nav-heading">Data</li>
       
       <li class="nav-item">
-        <a class="nav-link @if(!request()->routeIs('suppliers/*')) collapsed @endif" href="{{ route('suppliers.index') }}">
+        <a class="nav-link @if(!request()->is('dashboard/suppliers*')) collapsed @endif" href="{{ route('suppliers.index') }}">
           <i class="bi bi-stack"></i>
           <span>Supplier</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link @if(!request()->routeIs('requests/*')) collapsed @endif" href="{{ route('requests.index') }}">
+        <a class="nav-link @if(!request()->is('dashboard/products*')) collapsed @endif" href="{{ route('products.index') }}">
+          <i class="bi bi-box-fill"></i>
+          <span>Product</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link @if(!request()->is('dashboard/requests*')) collapsed @endif" href="{{ route('requests.index') }}">
           <i class="bi bi-arrow-left-right"></i>
           <span>Request</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link @if(!request()->routeIs('users/*')) collapsed @endif" href="{{ route('users.index') }}">
+        <a class="nav-link @if(!request()->is('dashboard/users*')) collapsed @endif" href="{{ route('users.index') }}">
           <i class="bi bi-person-lines-fill"></i>
           <span>User</span>
         </a>
@@ -37,7 +44,7 @@
       <li class="nav-heading">Reports</li>
 
       <li class="nav-item">
-        <a class="nav-link @if(!request()->routeIs('reports/*')) collapsed @endif" href="{{ route('reports.export') }}">
+        <a class="nav-link @if(!request()->is('dashboard/reports*')) collapsed @endif" href="{{ route('reports.export') }}">
           <i class="bi bi-file-earmark-bar-graph-fill"></i>
           <span>Report Request</span>
         </a>

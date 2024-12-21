@@ -8,6 +8,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard.index');
+        $data = [
+            'title' => 'Dashboard | E-Procurement'
+        ];
+
+        return view('dashboard.index', $data);
     }
 }
