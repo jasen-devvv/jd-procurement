@@ -2,7 +2,7 @@
 include .env
 
 # Variables
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 
 # Commands
 .PHONY: build up down restart logs artisan composer bash
