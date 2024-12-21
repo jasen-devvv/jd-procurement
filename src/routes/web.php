@@ -2,18 +2,20 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
 
 // Authentication Routes
 Route::prefix('auth')->group(function() {
-    Route::get('login', [AuthController::class, 'loginForm'])->name('login.form');
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::get('login', [AuthController::class, 'loginForm'])->middleware(['guest'])->name('login.form');
+    Route::post('login', [AuthController::class, 'login'])->middleware(['guest'])->name('login');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::prefix('dashboard')->group(function() { 
+Route::prefix('dashboard')->middleware(['auth'])->group(function() { 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -29,9 +31,12 @@ Route::prefix('dashboard')->group(function() {
         
         // Supplier Management Routes
         Route::resource('suppliers', SupplierController::class);
+
+        // Product Management Routes
+        Route::resource('products', ProductController::class);
     
         // Users Management Routes
-        Route::resource('users', SupplierController::class);
+        Route::resource('users', UserController::class);
         
         // Export
         Route::get('/reports/export', [RequestController::class, 'export'])->name('reports.export');
