@@ -29,6 +29,9 @@
   <!-- Template Main CSS File -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
+  <!-- Custom CSS File -->
+  <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
   <!-- =======================================================
   * Template Name: NiceAdmin
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -71,6 +74,9 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('js/main.js') }}"></script>
+
+  <!-- Custom JS File -->
+  <script src="{{ asset('js/custom.js') }}"></script>
   
   <!-- Custom JS -->
   @yield('script')
