@@ -21,11 +21,11 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Suppliers <a class="btn btn-success" href="{{ route('suppliers.create') }}">Add <i class="bi bi-plus"></i></a></h5>
-            <p>Note: name suppliers use uppercase</p>
+            <div class="alert alert-info"><b>Note</b>: Click detail for rating</div>
 
             <!-- Table with stripped rows -->
             <div class="table-responsive">
-              <table class="table datatable">
+              <table class="table table-hover datatable">
                 <thead>
                   <tr>
                     <th width="10%">No.</th>

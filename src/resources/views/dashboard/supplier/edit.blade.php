@@ -8,7 +8,7 @@
         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
         <li class="breadcrumb-item">Data</li>
         <li class="breadcrumb-item">Supplier</li>
-        <li class="breadcrumb-item active">Create</li>
+        <li class="breadcrumb-item active">Edit</li>
       </ol>
     </nav>
   </div><!-- End Page Title -->
@@ -21,13 +21,14 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Form Add Supplier</h5>
+            <h5 class="card-title">Form Edit Supplier</h5>
 
-            <form id="formSupplier" action="{{ route('suppliers.store') }}" method="POST" class="row g-3 needs-validation @if($errors->any()) was-validated @endif" novalidate>
+            <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" class="row g-3 needs-validation @if($errors->any()) was-validated @endif" novalidate>
                 @csrf
+                @method('PUT')
                 <div class="col-12">
                   <label for="name" class="form-label">Name</label>
-                  <input type="text" class="form-control" value="{{ old('name') }}" name="name" id="name" placeholder="ex: Jasen" required>
+                  <input type="text" class="form-control" value="{{ $supplier->name }}" name="name" id="name" placeholder="ex: Jasen" required>
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -35,7 +36,7 @@
 
                 <div class="col-12">
                   <label for="contact" class="form-label">Contact</label>
-                  <input type="number" class="form-control" value="{{ old('contanct') }}" id="contact" name="contact" placeholder="ex: 0812-3456-7890" required>
+                  <input type="number" class="form-control" value="{{ $supplier->contact }}" id="contact" name="contact" placeholder="ex: 0812-3456-7890" required>
                     @error('contact')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -43,7 +44,7 @@
 
                 <div class="col-12">
                   <label for="address" class="form-label">Address</label>
-                  <input type="text" class="form-control" value="{{ old('address') }}" id="address" name="address" placeholder="ex: New York 65, street 12" required>
+                  <input type="text" class="form-control" value="{{ $supplier->address }}" id="address" name="address" placeholder="ex: New York 65, street 12" required>
                     @error('address')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
