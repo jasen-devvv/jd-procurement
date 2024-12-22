@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('supplier')->get();
 
         $data = [
             'title' => 'Product | E-Procurement',
@@ -27,8 +28,11 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $suppliers = Supplier::all();
+
         $data = [
             'title' => 'Product | E-Procurement',
+            'suppliers' => $suppliers
         ];
 
         return view('dashboard.product.create', $data);
@@ -41,11 +45,13 @@ class ProductController extends Controller
     {
         $validData = $request->validate([
             'supplier_id' => 'required',
-            'name' => 'required',
-            'description' => 'sometimes',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
             'price' => 'required',
+        ], [
+            'supplier_id' => 'The supplier field is required'
         ]);
-
+        
         Product::create($validData);
 
         return redirect()->route('products.index');
@@ -71,9 +77,11 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $product = Product::findOrFail($id);
+        $suppliers = Supplier::all();
         $data = [
             'title' => 'Product | E-Procurement',
-            'product' => $product
+            'product' => $product,
+            'suppliers' => $suppliers
         ];
 
         return view('dashboard.product.edit', $data);
@@ -87,9 +95,11 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $validData = $request->validate([
             'supplier_id' => 'required',
-            'name' => 'required',
-            'description' => 'sometimes',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
             'price' => 'required',
+        ], [
+            'supplier_id' => 'The supplier field is required'
         ]);
 
         $product->update($validData);
