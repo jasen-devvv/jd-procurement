@@ -21,19 +21,20 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Products <a class="btn btn-success" href="{{ route('products.create') }}">Add <i class="bi bi-plus"></i></a></h5>
-            <p>Note: name prodcuts use uppercase</p>
+            <div class="alert alert-warning"><b>Note</b>: Please add a supplier first.</div>
 
             <!-- Table with stripped rows -->
             <div class="table-responsive">
-              <table class="table datatable">
+              <table class="table table-hover datatable">
                 <thead>
                   <tr>
                     <th width="10%">No.</th>
-                    <th width="20%">
+                    <th width="25%">Supplier</th>
+                    <th width="15%">
                       <b>N</b>ame
                     </th>
                     <th width="20%">Description</th>
-                    <th width="30%">Price</th>
+                    <th width="20%">Price</th>
                     <th width="10%">Action</th>
                   </tr>
                 </thead>
@@ -41,12 +42,12 @@
                   @foreach($products as $product)
                       <tr>
                           <td>{{ $loop->iteration }}.</td>
+                          <td>{{ $product->supplier->name }}</td>
                           <td>{{ $product->name }}</td>
                           <td>{{ $product->description }}</td>
-                          <td>{{ $product->price }}</td>
+                          <td>Rp. {{ $product->price }}</td>
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
-                                  <a href="{{ route('products.show', $product->id) }}" class="btn btn-success">Detail</a>
                                   <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
                                   <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                                     @csrf
