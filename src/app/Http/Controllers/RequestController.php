@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Request as ModelsRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RequestController extends Controller
 {
@@ -11,7 +13,14 @@ class RequestController extends Controller
      */
     public function index()
     {
-        //
+        $requests = ModelsRequest::all();
+
+        $data = [
+            'title' => 'Request | E-Procurement',
+            'requests' => $requests
+        ];
+
+        return view('dashboard.request.index', $data);
     }
 
     /**
@@ -19,7 +28,11 @@ class RequestController extends Controller
      */
     public function create()
     {
-        //
+        $data = [
+            'title' => 'Request | E-Procurement',
+        ];
+
+        return view('dashboard.request.create', $data);
     }
 
     /**
@@ -27,7 +40,19 @@ class RequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userId = Auth::id();
+        $validData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'quantity' => 'required',
+            'deadline' => 'date',
+        ]);
+
+        $validData['user_id'] = $userId;
+
+        ModelsRequest::create($validData);
+
+        return redirect()->route('requests.index');
     }
 
     /**
@@ -35,7 +60,14 @@ class RequestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $request = ModelsRequest::findOrFail($id);
+
+        $data = [
+            'title' => 'Request | E-Procurement',
+            'request' => $request
+        ];
+
+        return view('dashboard.request.detail', $data);
     }
 
     /**
@@ -43,7 +75,14 @@ class RequestController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $request = ModelsRequest::findOrFail($id);
+
+        $data = [
+            'title' => 'Request | E-Procurement',
+            'request' => $request
+        ];
+
+        return view('dashboard.request.edit', $data);
     }
 
     /**
@@ -51,7 +90,17 @@ class RequestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $requestData = ModelsRequest::findOrFail($id);
+        $validData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'quantity' => 'required',
+            'deadline' => 'date',
+        ]);
+
+        $requestData->update($validData);
+
+        return redirect()->route('requests.index');
     }
 
     /**
@@ -59,6 +108,10 @@ class RequestController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $request = ModelsRequest::findOrFail($id);
+
+        $request->delete($id);
+
+        return redirect()->route('requests.index');
     }
 }
