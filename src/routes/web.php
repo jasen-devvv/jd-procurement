@@ -33,7 +33,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
         Route::resource('suppliers', SupplierController::class);
 
         // Product Management Routes
-        Route::resource('products', ProductController::class);
+        Route::resource('products', ProductController::class)->except(['show']);
     
         // Users Management Routes
         Route::resource('users', UserController::class);
