@@ -26,7 +26,7 @@
             <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" class="row g-3 needs-validation @if($errors->any()) was-validated @endif" novalidate>
                 @csrf
                 @method('PUT')
-                <div class="col-12">
+                <div class="col-12 required">
                   <label for="name" class="form-label">Name</label>
                   <input type="text" class="form-control" value="{{ $supplier->name }}" name="name" id="name" placeholder="ex: Jasen" required>
                     @error('name')
@@ -34,7 +34,7 @@
                     @enderror
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 required">
                   <label for="contact" class="form-label">Contact</label>
                   <input type="number" class="form-control" value="{{ $supplier->contact }}" id="contact" name="contact" placeholder="ex: 0812-3456-7890" required>
                     @error('contact')
@@ -42,7 +42,7 @@
                     @enderror
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 required">
                   <label for="address" class="form-label">Address</label>
                   <input type="text" class="form-control" value="{{ $supplier->address }}" id="address" name="address" placeholder="ex: New York 65, street 12" required>
                     @error('address')
