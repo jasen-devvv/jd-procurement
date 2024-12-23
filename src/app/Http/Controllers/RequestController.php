@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Request as ModelsRequest;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,8 +29,11 @@ class RequestController extends Controller
      */
     public function create()
     {
+        $suppliers = Supplier::all();
+
         $data = [
             'title' => 'Request | E-Procurement',
+            'suppliers' => $suppliers
         ];
 
         return view('dashboard.request.create', $data);
@@ -60,11 +64,13 @@ class RequestController extends Controller
      */
     public function show(string $id)
     {
+        $suppliers = Supplier::all();
         $request = ModelsRequest::findOrFail($id);
 
         $data = [
             'title' => 'Request | E-Procurement',
-            'request' => $request
+            'request' => $request,
+            'suppliers' => $suppliers
         ];
 
         return view('dashboard.request.detail', $data);
@@ -75,11 +81,13 @@ class RequestController extends Controller
      */
     public function edit(string $id)
     {
+        $suppliers = Supplier::all();
         $request = ModelsRequest::findOrFail($id);
 
         $data = [
             'title' => 'Request | E-Procurement',
-            'request' => $request
+            'request' => $request,
+            'suppliers' => $suppliers
         ];
 
         return view('dashboard.request.edit', $data);
