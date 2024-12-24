@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Request as ModelsRequest;
 use App\Models\Supplier;
+use App\Enums\RequestStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class RequestController extends Controller
 {
@@ -30,10 +32,12 @@ class RequestController extends Controller
     public function create()
     {
         $suppliers = Supplier::all();
+        $status = RequestStatus::cases();
 
         $data = [
             'title' => 'Request | E-Procurement',
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
+            'status' => $status
         ];
 
         return view('dashboard.request.create', $data);
@@ -46,12 +50,17 @@ class RequestController extends Controller
     {
         $userId = Auth::id();
         $validData = $request->validate([
+            'supplier_id' => 'required',
             'name' => 'required|string',
-            'description' => 'nullable|string',
+            'description' => 'sometimes|string',
             'quantity' => 'required',
-            'deadline' => 'date',
+            'deadline' => 'required|date',
+            'status' => [Rule::enum(RequestStatus::class)],
+            'rejection_reason' => 'sometimes|string'
+        ], [
+            'supplier_id' => 'The supplier field is required.',
         ]);
-
+        
         $validData['user_id'] = $userId;
 
         ModelsRequest::create($validData);
@@ -70,7 +79,7 @@ class RequestController extends Controller
         $data = [
             'title' => 'Request | E-Procurement',
             'request' => $request,
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
         ];
 
         return view('dashboard.request.detail', $data);
@@ -83,11 +92,13 @@ class RequestController extends Controller
     {
         $suppliers = Supplier::all();
         $request = ModelsRequest::findOrFail($id);
+        $status = RequestStatus::cases();
 
         $data = [
             'title' => 'Request | E-Procurement',
             'request' => $request,
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
+            'status' => $status
         ];
 
         return view('dashboard.request.edit', $data);
@@ -100,10 +111,15 @@ class RequestController extends Controller
     {
         $requestData = ModelsRequest::findOrFail($id);
         $validData = $request->validate([
+            'supplier_id' => 'required',
             'name' => 'required|string',
-            'description' => 'nullable|string',
+            'description' => 'sometimes|string',
             'quantity' => 'required',
-            'deadline' => 'date',
+            'deadline' => 'required|date',
+            'status' => ['sometimes',Rule::enum(RequestStatus::class)],
+            'rejection_reason' => 'sometimes|string'
+        ], [
+            'supplier_id' => 'The supplier field is required.'
         ]);
 
         $requestData->update($validData);
