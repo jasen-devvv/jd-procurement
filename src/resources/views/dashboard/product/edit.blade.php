@@ -28,7 +28,7 @@
                 @method('PUT')
                 <div class="col-12 required">
                   <label for="supplier" class="form-label">Supplier</label>
-                  <select class="form-select" name="supplier_id" aria-label="Default select example" required>
+                  <select class="form-select" name="supplier_id" aria-label="Select supplier" required>
                     <option value="" selected>-- Choose Supplier --</option>
                     @foreach($suppliers as $supplier)
                       <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
