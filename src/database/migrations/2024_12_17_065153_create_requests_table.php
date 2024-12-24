@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('quantity');
             $table->date('deadline');
-            $table->string('status')->default('Pending');
+            $table->enum('status', ['pending', 'success', 'reject'])->default('pending');
             $table->text('rejection_reason')->nullable();
             $table->timestamps();
         });
