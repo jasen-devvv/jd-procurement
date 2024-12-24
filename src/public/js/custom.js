@@ -10,7 +10,23 @@
         return value.replace(/[^0-9]/g, "").slice(0, 2);   
     }
 
+    // Quill editor
+    const quillEditor = document.querySelector('#quill-editor')
+    const quillData = document.querySelector('#quill-data')
+
+    if(quillEditor && quillData) {
+        var quill = new Quill('#quill-editor', {
+            theme: 'snow',
+        })
+    }  
+
+    quill.on('text-change', function() {
+        var content = quill.root.innerHTML
+        quillData.value = content
+    })
+
     document.addEventListener("DOMContentLoaded", function () {
+        // Custom Input Rupiah
         const rupiahHiddenInputs = document.querySelector(".rupiah-hidden");
         const rupiahNumberInputs = document.querySelector(".rupiah-number");
         const rupiahDecimalInputs = document.querySelector(".rupiah-decimal");
@@ -23,9 +39,20 @@
                 rupiahDecimalInputs.value = formatDecimal(decimalPart || "00")
             }
         }
+
+        document.querySelector('#select-status').addEventListener('change', function(e) {
+            var rejectElement = document.querySelector('#rejection_reason')
+            if(e.target && e.target.value == 'reject') {
+                rejectElement.parentElement.classList.remove('d-none')
+                rejectElement.parentElement.classList.add('d-block')
+            } else {
+                rejectElement.parentElement.classList.remove('d-block')
+                rejectElement.parentElement.classList.add('d-none')
+            }
+        })
     });
 
-    document.body.addEventListener("input", function (e) {        
+    document.body.addEventListener("rejectElementinput", function (e) {        
         if (e.target && e.target.classList.contains("rupiah-number")) {
             let value = e.target.value.replace(/[^0-9]/g, "");
             let formatted = formatRupiah(value);
@@ -37,7 +64,6 @@
             let formatted = formatDecimal(value);
             e.target.value = formatted;
         }
-
     });
 
     document.body.addEventListener("submit", function (e) {
@@ -54,5 +80,5 @@
                 rupiahHiddenInputs.value = fullValue
             }
         }
-    });
+    });    
 })();
