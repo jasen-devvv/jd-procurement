@@ -20,7 +20,7 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Suppliers <a class="btn btn-success" href="{{ route('suppliers.create') }}">Add <i class="bi bi-plus"></i></a></h5>
+            <h5 class="card-title">Suppliers @can('create supplier') <a class="btn btn-success" href="{{ route('suppliers.create') }}">Add <i class="bi bi-plus"></i></a> @endcan</h5>
             <div class="alert alert-info"><b>Note</b>: Click detail for rating</div>
 
             <!-- Table with stripped rows -->
@@ -49,12 +49,17 @@
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
                                   <a href="{{ route('suppliers.show', $supplier->id) }}" class="btn btn-success">Detail</a>
+                                  @can('edit supplier')
                                   <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-warning">Edit</a>
+                                  @endcan
+
+                                  @can('delete supplier')
                                   <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
                                     @csrf
                                     @method("DELETE")
                                     <button type="submit" class="btn btn-danger d-inline rounded-0 rounded-end">Delete</button>
                                   </form>
+                                  @endcan
                               </div>
                           </td>
                       </tr>
@@ -70,10 +75,4 @@
       </div>
     </div>
   </section>
-@endsection
-
-@section('script')
-<script>
-
-</script>
 @endsection
