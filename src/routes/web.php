@@ -20,17 +20,19 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::middleware(['role:staff|admin'])->group(function() {
+        // Supplier Management Routes
+        Route::resource('suppliers', SupplierController::class);
+
         // Request Management
         Route::resource('requests', RequestController::class);
-    });
+    });  
+        // Supplier Management Routes
+        Route::resource('suppliers', SupplierController::class);
     
     Route::middleware(['role:admin'])->group(function() {
         // Approval Routes
         Route::put('/requests/{id}/approve', [RequestController::class, 'approve'])->name('requests.approve');
         Route::put('/requests/{id}/reject', [RequestController::class, 'reject'])->name('requests.reject');
-        
-        // Supplier Management Routes
-        Route::resource('suppliers', SupplierController::class);
 
         // Product Management Routes
         Route::resource('products', ProductController::class)->except(['show']);
