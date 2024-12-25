@@ -18,12 +18,14 @@
         </a>
       </li><!-- End Dashboard Nav -->
 
+      @role('admin') 
       <li class="nav-item">
         <a class="nav-link @if(!request()->is('dashboard/products*')) collapsed @endif" href="{{ route('products.index') }}">
           <i class="bi bi-box-fill"></i>
           <span>Product</span>
         </a>
       </li><!-- End Dashboard Nav -->
+      @endrole
 
       <li class="nav-item">
         <a class="nav-link @if(!request()->is('dashboard/requests*')) collapsed @endif" href="{{ route('requests.index') }}">
@@ -32,15 +34,16 @@
         </a>
       </li><!-- End Dashboard Nav -->
 
+      @role('admin')
       <li class="nav-item">
         <a class="nav-link @if(!request()->is('dashboard/users*')) collapsed @endif" href="{{ route('users.index') }}">
           <i class="bi bi-person-lines-fill"></i>
           <span>User</span>
         </a>
       </li><!-- End Dashboard Nav -->
+      @endrole
 
-   
-
+      @role('admin')
       <li class="nav-heading">Reports</li>
 
       <li class="nav-item">
@@ -48,7 +51,8 @@
           <i class="bi bi-file-earmark-bar-graph-fill"></i>
           <span>Report Request</span>
         </a>
-      </li><!-- End Profile Page Nav -->
+      </li><!-- End Profile Page Nav --> 
+      @endrole
     </ul>
 
   </aside><!-- End Sidebar-->
