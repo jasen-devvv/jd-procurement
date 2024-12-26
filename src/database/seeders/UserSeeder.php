@@ -19,7 +19,14 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => 'admin123',
         ]);
+
+        $staff = User::create([
+            'name' => 'Staff',
+            'email' => 'staff@example.com',
+            'password' => 'staff123',
+        ]);
         
         $admin->assignRole('admin');
+        $staff->assignRole('staff');
     }
 }
