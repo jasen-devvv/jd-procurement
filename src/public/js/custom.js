@@ -18,12 +18,12 @@
         var quill = new Quill('#quill-editor', {
             theme: 'snow',
         })
-    }  
 
-    quill.on('text-change', function() {
-        var content = quill.root.innerHTML
-        quillData.value = content
-    })
+        quill.on('text-change', function() {
+            var content = quill.root.innerHTML
+            quillData.value = content
+        })
+    }  
 
     document.addEventListener("DOMContentLoaded", function () {
         // Custom Input Rupiah
@@ -40,19 +40,23 @@
             }
         }
 
-        document.querySelector('#select-status').addEventListener('change', function(e) {
-            var rejectElement = document.querySelector('#rejection_reason')
-            if(e.target && e.target.value == 'reject') {
-                rejectElement.parentElement.classList.remove('d-none')
-                rejectElement.parentElement.classList.add('d-block')
-            } else {
-                rejectElement.parentElement.classList.remove('d-block')
-                rejectElement.parentElement.classList.add('d-none')
-            }
-        })
+        const selectStatus = document.querySelector('#select-status')
+        
+        if(selectStatus) {
+            selectStatus.addEventListener('change', function(e) {
+                var rejectElement = document.querySelector('#rejection_reason')
+                if(e.target && e.target.value == 'reject') {
+                    rejectElement.parentElement.classList.remove('d-none')
+                    rejectElement.parentElement.classList.add('d-block')
+                } else {
+                    rejectElement.parentElement.classList.remove('d-block')
+                    rejectElement.parentElement.classList.add('d-none')
+                }
+            })
+        }
     });
 
-    document.body.addEventListener("rejectElementinput", function (e) {        
+    document.body.addEventListener("input", function (e) {        
         if (e.target && e.target.classList.contains("rupiah-number")) {
             let value = e.target.value.replace(/[^0-9]/g, "");
             let formatted = formatRupiah(value);
