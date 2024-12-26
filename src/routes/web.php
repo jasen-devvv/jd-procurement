@@ -18,6 +18,7 @@ Route::prefix('auth')->group(function() {
 Route::prefix('dashboard')->middleware(['auth'])->group(function() { 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     
     Route::middleware(['role:staff|admin'])->group(function() {
         // Supplier Management Routes
@@ -25,19 +26,23 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
 
         // Request Management
         Route::resource('requests', RequestController::class);
-    });  
+
         // Supplier Management Routes
-        Route::resource('suppliers', SupplierController::class);
+        Route::resource('suppliers', SupplierController::class)->only(['index']);
+    });  
     
     Route::middleware(['role:admin'])->group(function() {
         // Approval Routes
         Route::put('/requests/{id}/approve', [RequestController::class, 'approve'])->name('requests.approve');
         Route::put('/requests/{id}/reject', [RequestController::class, 'reject'])->name('requests.reject');
 
+        // Supplier Management Routes
+        Route::resource('suppliers', SupplierController::class)->except(['index']);
+
         // Product Management Routes
         Route::resource('products', ProductController::class)->except(['show']);
     
-        // Users Management Routes
+        // Users Management Routesonly
         Route::resource('users', UserController::class);
         
         // Export
