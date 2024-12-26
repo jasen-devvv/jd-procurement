@@ -5,6 +5,6 @@ namespace App\Enums;
 enum RequestStatus: string
 {
     case PENDING = 'pending';
-    case SUCCESS = 'success';
+    case ACCEPT = 'accept';
     case REJECT = 'reject';
 }
