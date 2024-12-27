@@ -6,6 +6,7 @@ use App\Enums\RequestStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Request extends Model
 {
@@ -38,5 +39,13 @@ class Request extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public static function logActivity($eventName)
+    {
+        activity('request')
+            ->causedBy(Auth::user())
+            ->performedOn(new self())
+            ->log("Request {$eventName}");
     }
 }
