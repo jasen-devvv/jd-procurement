@@ -64,6 +64,7 @@ class RequestController extends Controller
         $validData['user_id'] = $userId;
 
         ModelsRequest::create($validData);
+        ModelsRequest::logActivity("created");
 
         return redirect()->route('requests.index');
     }
@@ -123,6 +124,7 @@ class RequestController extends Controller
         ]);
 
         $requestData->update($validData);
+        ModelsRequest::logActivity("updated");
 
         return redirect()->route('requests.index');
     }
@@ -135,7 +137,17 @@ class RequestController extends Controller
         $request = ModelsRequest::findOrFail($id);
 
         $request->delete($id);
+        ModelsRequest::logActivity("deleted");
 
         return redirect()->route('requests.index');
+    }
+
+    public function export()
+    {
+        $data = [
+            'title' => 'Report | E-Procurement'
+        ];
+
+        return view('dashboard.report.index', $data);
     }
 }

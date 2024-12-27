@@ -46,6 +46,7 @@ class SupplierController extends Controller
         ]);
 
         Supplier::create($validData);
+        Supplier::logActivity("created");
 
         return redirect()->route('suppliers.index');
     }
@@ -94,6 +95,7 @@ class SupplierController extends Controller
         ]);
 
         $supplier->update($validData);
+        Supplier::logActivity("updated");
 
         return redirect()->route('suppliers.index');
     }
@@ -106,6 +108,7 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
 
         $supplier->delete();
+        Supplier::logActivity("deleted"); 
      
         return redirect()->route('suppliers.index');
     }

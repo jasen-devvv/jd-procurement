@@ -53,6 +53,7 @@ class ProductController extends Controller
         ]);
         
         Product::create($validData);
+        Product::logActivity("created");
 
         return redirect()->route('products.index');
     }
@@ -103,6 +104,7 @@ class ProductController extends Controller
         ]);
 
         $product->update($validData);
+        Product::logActivity("updated");
 
         return redirect()->route('products.index');
     }
@@ -115,6 +117,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $product->delete();
+        Product::logActivity("deleted");
 
         return redirect()->route('products.index');
     }
