@@ -40,6 +40,7 @@
             }
         }
 
+        // Select Status
         const selectStatus = document.querySelector('#select-status')
         
         if(selectStatus) {
@@ -53,6 +54,21 @@
                     rejectElement.parentElement.classList.add('d-none')
                 }
             })
+        }
+
+        // Fullcalendar
+        var calendarEl = document.getElementById('calendar')
+        if(calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                // plugins: ['dayGrid', 'interaction'],
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'title', // Tombol di sisi kiri (hapus 'today' di sini)
+                    center: '',  // Bagian tengah: judul bulan/tahun
+                    right: 'prev,next' // Opsi tampilan di sisi kanan
+                },
+            })
+            calendar.render()
         }
     });
 
