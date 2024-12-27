@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use App\Models\Request as ModelsRequest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
 class DashboardController extends Controller
 {
@@ -40,23 +41,23 @@ class DashboardController extends Controller
                 break;
         }
 
-        $productCount = Product::whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->count();
-        $supplierCount = Supplier::whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->count();
-        $requestCount = ModelsRequest::whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->count();
+        $productCount = Product::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
+        $supplierCount = Supplier::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
+        $requestCount = ModelsRequest::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
 
         $previousProductCount = Product::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
         $previousSupplierCount = Supplier::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
         $previousRequestCount = ModelsRequest::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
 
-        $productPercentageChange = $this->calculatePercentageChange($productCount, $previousProductCount);
-        $supplierPercentageChange = $this->calculatePercentageChange($supplierCount, $previousSupplierCount);
-        $requestPercentageChange = $this->calculatePercentageChange($requestCount, $previousRequestCount);
+        $productPercentageChange = parent::calculatePercentageChange($productCount, $previousProductCount);
+        $supplierPercentageChange = parent::calculatePercentageChange($supplierCount, $previousSupplierCount);
+        $requestPercentageChange = parent::calculatePercentageChange($requestCount, $previousRequestCount);
+
+        // Activity Logs
+        $recentActivities = Activity::orderBy('created_at', 'desc')->where('causer_id', auth()->user()->id)->take(5)->get();
+
+        // Requests
+        $requests = ModelsRequest::with(['supplier'])->get();
 
         $data = [
             'title' => 'Dashboard | E-Procurement',
@@ -66,19 +67,11 @@ class DashboardController extends Controller
             'productPercentageChange' => $productPercentageChange,
             'supplierPercentageChange' => $supplierPercentageChange,
             'requestPercentageChange' => $requestPercentageChange,
+            'recentActivities' => $recentActivities,
+            'requests' => $requests
         ];
 
         return view('dashboard.index', $data);
-    }
-
-
-    private function calculatePercentageChange($current, $previous)
-    {
-        if ($previous == 0) {
-            return $current > 0 ? 100 : 0; // Jika sebelumnya 0, beri 100% atau 0% berdasarkan kondisi
-        }
-
-        return (($current - $previous) / $previous) * 100;
     }
 
     public function profile()
