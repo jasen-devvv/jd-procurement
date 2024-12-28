@@ -20,8 +20,10 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Requests <a class="btn btn-success" href="{{ route('requests.create') }}">Add <i class="bi bi-plus"></i></a></h5>
+            <h5 class="card-title">Requests @can('create request') <a class="btn btn-success" href="{{ route('requests.create') }}">Add <i class="bi bi-plus"></i></a> @endcan </h5>
+            @role('staff')
             <div class="alert alert-warning"><b>Note</b>: Please add a supplier first.</div>
+            @endrole
             @role('admin')
             <div class="alert alert-info"><b>Note</b>: To provide approval or rejection status, click the detail button.</div>
             @endrole
@@ -36,10 +38,9 @@
                       <b>N</b>ame
                     </th>
                     <th width="20%">Supplier</th>
-                    <th width="20%">Quantity</th>
-                    <th width="10%">Deadline</th>
+                    <th width="20%">Deadline</th>
                     <th width="10%">Status</th>
-                    <th width="10%">Action</th>
+                    <th width="20%">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -48,7 +49,6 @@
                           <td>{{ $loop->iteration }}.</td>
                           <td>{{ $request->supplier->name }}</td>
                           <td>{{ $request->name }}</td>
-                          <td>{{ $request->quantity }}</td>
                           <td>{{ $request->deadline }}</td>
                           <td>
                             @if ($request->status->value == 'pending')
@@ -61,12 +61,17 @@
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
                                   <a href="{{ route('requests.show', $request->id) }}" class="btn btn-success">Detail</a>
+                                  @can('edit request')
                                   <a href="{{ route('requests.edit', $request->id) }}" class="btn btn-warning">Edit</a>
+                                  @endcan
+
+                                  @can('delete request')
                                   <form action="{{ route('requests.destroy', $request->id) }}" method="POST">
                                     @csrf
                                     @method("DELETE")
                                     <button type="submit" class="btn btn-danger d-inline rounded-0 rounded-end">Delete</button>
                                   </form>
+                                  @endcan
                               </div>
                           </td>
                       </tr>

@@ -20,7 +20,7 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Products <a class="btn btn-success" href="{{ route('products.create') }}">Add <i class="bi bi-plus"></i></a></h5>
+            <h5 class="card-title">Products @can('view product') <a class="btn btn-success" href="{{ route('products.create') }}">Add <i class="bi bi-plus"></i></a>@endcan</h5>
             <div class="alert alert-warning"><b>Note</b>: Please add a supplier first.</div>
 
             <!-- Table with stripped rows -->
@@ -35,7 +35,9 @@
                     </th>
                     <th width="20%">Description</th>
                     <th width="20%">Price</th>
+                    @role('admin')
                     <th width="10%">Action</th>
+                    @endrole
                   </tr>
                 </thead>
                 <tbody>
@@ -46,16 +48,23 @@
                           <td>{{ $product->name }}</td>
                           <td>{{ $product->description }}</td>
                           <td>Rp. {{ $product->price }}</td>
+                          @role('admin')
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
+                                  @can('edit product')
                                   <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
+                                  @endcan
+
+                                  @can('delete product')
                                   <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                                     @csrf
                                     @method("DELETE")
                                     <button type="submit" class="btn btn-danger d-inline rounded-0 rounded-end">Delete</button>
                                   </form>
+                                  @endcan
                               </div>
                           </td>
+                          @endrole
                       </tr>
                   @endforeach
                 </tbody>
