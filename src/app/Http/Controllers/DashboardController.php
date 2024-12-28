@@ -59,6 +59,22 @@ class DashboardController extends Controller
         // Requests
         $requests = ModelsRequest::with(['supplier'])->get();
 
+         // Ambil data untuk chart
+         $productData = Product::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+         ->groupBy('date')
+         ->orderBy('date')
+         ->get();
+
+        $supplierData = Supplier::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get();
+
+        $requestData = ModelsRequest::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get();
+
         $data = [
             'title' => 'Dashboard | E-Procurement',
             'productCount' => $productCount,
@@ -68,7 +84,10 @@ class DashboardController extends Controller
             'supplierPercentageChange' => $supplierPercentageChange,
             'requestPercentageChange' => $requestPercentageChange,
             'recentActivities' => $recentActivities,
-            'requests' => $requests
+            'requests' => $requests,
+            'productData' => $productData,
+            'supplierData' => $supplierData,
+            'requestData' => $requestData
         ];
 
         return view('dashboard.index', $data);
