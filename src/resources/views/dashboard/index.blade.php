@@ -19,11 +19,11 @@
 	<div class="row">
 
 	  <!-- Left side columns -->
-	  <div class="col-lg-8">
+	  <div class="@role('admin') col-lg-8 @endrole @role('staff') col-lg-6 @endrole">
 		<div class="row">
 
 		  <!-- Product Card -->
-		  <div class="col-xxl-4 col-md-6">
+		  <div class="@role('admin') col-xxl-4 @endrole @role('staff') col-xxl-6 @endrole col-md-6">
 			<div class="card info-card product-card">
 
 			  <div class="filter">
@@ -49,12 +49,14 @@
 				  </div>
 				  <div class="ps-3">
 					<h6>{{ $productCount }}</h6>
+					@role('admin')
 					<span class="{{ $productPercentageChange >= 0 ? 'text-success' : 'text-danger' }} small pt-1 fw-bold">
 						{{ number_format($productPercentageChange, 2) }}%
 					</span>
 					<span class="text-muted small pt-1 ps-1">
 						{{ $productPercentageChange >= 0 ? 'increase' : 'decrease' }}
 					</span>
+					@endrole
 				  </div>
 				</div>
 			  </div>
@@ -63,7 +65,7 @@
 		  </div><!-- End Product Card -->
 
 		  <!-- Supplier Card -->
-		  <div class="col-xxl-4 col-md-6">
+		  <div class="@role('admin') col-xxl-4 @endrole @role('staff') col-xxl-6 @endrole col-md-6">
 			<div class="card info-card supplier-card">
 
 			  <div class="filter">
@@ -88,12 +90,14 @@
 				  </div>
 				  <div class="ps-3">
 					<h6>{{ $supplierCount }}</h6>
+					@role('admin')
 					<span class="{{ $supplierPercentageChange >= 0 ? 'text-success' : 'text-danger' }} small pt-1 fw-bold">
 						{{ number_format($supplierPercentageChange, 2) }}%
 					</span>
 					<span class="text-muted small pt-1 ps-1">
 						{{ $supplierPercentageChange >= 0 ? 'increase' : 'decrease' }}
 					</span>
+					@endrole
 				  </div>
 				</div>
 			  </div>
@@ -101,6 +105,7 @@
 			</div>
 		  </div><!-- End Supplier Card -->
 
+		  @role('admin')
 		  <!-- Request Card -->
 		  <div class="col-xxl-4 col-xl-12">
 
@@ -141,8 +146,10 @@
 			</div>
 
 		  </div><!-- End Request Card -->
+		  @endrole
 
 		  <!-- Reports -->
+		  @role('admin')
 		  <div class="col-12">
 			<div class="card">
 
@@ -157,53 +164,70 @@
 			  
 			</div>
 		  </div><!-- End Reports -->		
+		  @endrole
 		  
+		  @role('admin')
 		  <div class="col-12">
 			<!-- Recent Sales -->
-		<div class="card recent-sales overflow-auto">
-			<div class="card-body">
-			  <h5 class="card-title">Recent Request</h5>
+			<div class="card recent-sales overflow-auto">
+				<div class="card-body">
+				<h5 class="card-title">Recent Request</h5>
 
-			  <table class="table table-borderless datatable">
-				<thead>
-				  <tr>
-					<th scope="col">#</th>
-					<th scope="col">Request</th>
-					<th scope="col">Supplier</th>
-					<th scope="col">Deadline</th>
-					<th scope="col">Status</th>
-				  </tr>
-				</thead>
-				<tbody>
-					@foreach($requests as $req)
+				<table class="table table-borderless datatable">
+					<thead>
 					<tr>
-					  <td>{{ $loop->iteration }}</td>
-					  <td>{{ $req->name }}</td>
-					  <td>{{ $req->supplier->name }}</td>
-					  <td>{{ $req->deadline }}</td>
-					  <td>
-						@if ($req->status->value == 'pending')
-                            <span class="badge bg-primary">{{ $req->status->name }}</span>
-                        @elseif($req->status->value == 'success')
-                            <span class="badge bg-success">{{ $req->status->name }}</span>
-                        @elseif($req->status->value == 'reject')
-                            <span class="badge bg-danger">{{ $req->status->name }}</span>
-                        @endif
+						<th scope="col">#</th>
+						<th scope="col">Request</th>
+						<th scope="col">Supplier</th>
+						<th scope="col">Deadline</th>
+						<th scope="col">Status</th>
 					</tr>
-					@endforeach
-				</tbody>
-			  </table>
+					</thead>
+					<tbody>
+						@foreach($requests as $req)
+						<tr>
+						<td>{{ $loop->iteration }}</td>
+						<td>{{ $req->name }}</td>
+						<td>{{ $req->supplier->name }}</td>
+						<td>{{ $req->deadline }}</td>
+						<td>
+							@if ($req->status->value == 'pending')
+								<span class="badge bg-primary">{{ $req->status->name }}</span>
+							@elseif($req->status->value == 'success')
+								<span class="badge bg-success">{{ $req->status->name }}</span>
+							@elseif($req->status->value == 'reject')
+								<span class="badge bg-danger">{{ $req->status->name }}</span>
+							@endif
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
 
-			</div>
+				</div>
 
-		</div> <!-- End Recent Sales -->
+			</div> <!-- End Recent Sales -->
 		  </div>
+		  @endrole
+
+		  @role('staff')
+		  <div class="col-12">
+			  <!-- Full Calendar -->
+			  <div class="card">
+			  <div class="card-body">
+				  <h5 class="card-title">Calendar</h5>
+  
+				  <div id="calendar"></div>
+  
+			  </div>
+			  </div><!-- End Full Calendar -->
+		  </div>
+		@endrole
 
 		</div>
 	  </div><!-- End Left side columns -->
 
 	  <!-- Right side columns -->
-	  <div class="col-lg-4">
+	  <div class="@role('admin') col-lg-4 @endrole @role('staff') col-lg-6 @endrole">
 
 		<!-- Recent Activity -->
 		<div class="card">
@@ -239,6 +263,7 @@
 		  </div>
 		</div><!-- End Recent Activity -->
 
+		@role('admin')
 		<!-- Full Calendar -->
 		<div class="card">
 		  <div class="card-body">
@@ -248,6 +273,7 @@
 
 		  </div>
 		</div><!-- End Full Calendar -->
+		@endrole
 
 	  </div><!-- End Right side columns -->
 
