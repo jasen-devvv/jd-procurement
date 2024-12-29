@@ -217,7 +217,7 @@
 				@else
 					@foreach($recentActivities as $activity)
 					<div class="activity-item d-flex">
-						<div class="activite-label">{{ $activity->created_at->format('d M Y') }}</div>
+						<div class="activite-label">{{ $activity->created_at->format('d M Y, H:i') }}</div>
 							@php
 								$color = match($activity->log_name) {
 									'product' => 'text-warning',
