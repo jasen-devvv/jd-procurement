@@ -59,7 +59,7 @@ class DashboardController extends Controller
         // Requests
         $requests = ModelsRequest::with(['supplier'])->get();
 
-         // Ambil data untuk chart
+         // Data chart
          $productData = Product::selectRaw('DATE(created_at) as date, COUNT(*) as count')
          ->groupBy('date')
          ->orderBy('date')

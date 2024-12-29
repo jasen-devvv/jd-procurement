@@ -16,7 +16,11 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $requests = ModelsRequest::all();
+        if(Auth::user()->hasRole('admin')) {
+            $requests = ModelsRequest::with('supplier')->get();
+        } else {
+            $requests = ModelsRequest::with('supplier')->where('user_id', Auth::id())->get();
+        }
 
         $data = [
             'title' => 'Request | E-Procurement',
