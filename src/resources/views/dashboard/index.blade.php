@@ -193,7 +193,7 @@
 						<td>
 							@if ($req->status->value == 'pending')
 								<span class="badge bg-primary">{{ $req->status->name }}</span>
-							@elseif($req->status->value == 'success')
+							@elseif($req->status->value == 'accept')
 								<span class="badge bg-success">{{ $req->status->name }}</span>
 							@elseif($req->status->value == 'reject')
 								<span class="badge bg-danger">{{ $req->status->name }}</span>
