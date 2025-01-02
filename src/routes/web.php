@@ -1,9 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -19,12 +19,13 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
-    
-    Route::middleware(['role:staff|admin'])->group(function() {
-        // Supplier Management Routes
-        Route::resource('suppliers', SupplierController::class);
 
-        // Request Management
+
+    // Product Management Routes
+    Route::resource('products', ProductController::class)->except(['show']);
+    
+    Route::middleware(['role:staff'])->group(function() {
+        // Request Management Routes
         Route::resource('requests', RequestController::class);
 
         // Supplier Management Routes
@@ -33,14 +34,13 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
     
     Route::middleware(['role:admin'])->group(function() {
         // Approval Routes
-        Route::put('/requests/{id}/approve', [RequestController::class, 'approve'])->name('requests.approve');
-        Route::put('/requests/{id}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+        Route::patch('/requests/{id}/status', [RequestController::class, 'status'])->name('requests.status');
+
+        // Request Management Routes
+        Route::resource('requests', RequestController::class)->only(['index', 'show']);
 
         // Supplier Management Routes
-        Route::resource('suppliers', SupplierController::class)->except(['index']);
-
-        // Product Management Routes
-        Route::resource('products', ProductController::class)->except(['show']);
+        Route::resource('suppliers', SupplierController::class);
     
         // Users Management Routesonly
         Route::resource('users', UserController::class);
