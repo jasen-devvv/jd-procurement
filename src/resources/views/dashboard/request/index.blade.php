@@ -40,7 +40,14 @@
                     <th width="20%">Supplier</th>
                     <th width="20%">Deadline</th>
                     <th width="10%">Status</th>
+
+                    @role('admin')
+                    <th width="10%">Action</th>
+                    @endrole
+
+                    @role('staff')
                     <th width="20%">Action</th>
+                    @endrole
                   </tr>
                 </thead>
                 <tbody>
@@ -53,7 +60,7 @@
                           <td>
                             @if ($request->status->value == 'pending')
                                 <span class="badge bg-primary">{{ $request->status->name }}</span>
-                            @elseif($request->status->value == 'success')
+                            @elseif($request->status->value == 'accept')
                                 <span class="badge bg-success">{{ $request->status->name }}</span>
                             @elseif($request->status->value == 'reject')
                                 <span class="badge bg-danger">{{ $request->status->name }}</span>
