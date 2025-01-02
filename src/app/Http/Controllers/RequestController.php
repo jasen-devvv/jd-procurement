@@ -78,13 +78,11 @@ class RequestController extends Controller
      */
     public function show(string $id)
     {
-        $suppliers = Supplier::all();
         $request = ModelsRequest::findOrFail($id);
 
         $data = [
             'title' => 'Request | E-Procurement',
             'request' => $request,
-            'suppliers' => $suppliers,
         ];
 
         return view('dashboard.request.detail', $data);
@@ -143,6 +141,22 @@ class RequestController extends Controller
         $request->delete($id);
         ModelsRequest::logActivity("deleted");
 
+        return redirect()->route('requests.index');
+    }
+
+    public function status(Request $request, string $id) 
+    {
+        $validData = $request->validate([
+            'status' => [Rule::enum(RequestStatus::class)]
+        ]);
+
+        $request = ModelsRequest::findOrFail($id);
+        $request->update([
+            'status' => $validData['status']
+        ]);
+
+        ModelsRequest::logActivity("updated status");
+        
         return redirect()->route('requests.index');
     }
 
