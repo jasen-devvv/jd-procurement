@@ -43,7 +43,7 @@ class ProfileController extends Controller
         return redirect()->route('profile');
     }
 
-    public function change_password()
+    public function change_password(Request $request)
     {
         $validData = $request->validate([
             'old_password' => 'required',
