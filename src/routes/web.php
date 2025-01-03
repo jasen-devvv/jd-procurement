@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 
@@ -18,8 +19,11 @@ Route::prefix('auth')->group(function() {
 Route::prefix('dashboard')->middleware(['auth'])->group(function() { 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
 
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/change/password', [ProfileController::class, 'change_password'])->name('profile.change_password');
 
     // Product Management Routes
     Route::resource('products', ProductController::class)->except(['show']);
