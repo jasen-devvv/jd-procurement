@@ -15,7 +15,8 @@ class Supplier extends Model
         'name',
         'contact',
         'address',
-        'rating'
+        'rating_total',
+        'rating_count'
     ];
 
     public function products(): HasMany
