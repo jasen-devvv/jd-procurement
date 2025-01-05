@@ -159,13 +159,4 @@ class RequestController extends Controller
         
         return redirect()->route('requests.index');
     }
-
-    public function export()
-    {
-        $data = [
-            'title' => 'Report | E-Procurement'
-        ];
-
-        return view('dashboard.report.index', $data);
-    }
 }
