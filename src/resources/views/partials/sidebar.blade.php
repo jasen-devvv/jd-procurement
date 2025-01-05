@@ -47,7 +47,7 @@
       <li class="nav-heading">Reports</li>
 
       <li class="nav-item">
-        <a class="nav-link @if(!request()->is('dashboard/reports*')) collapsed @endif" href="{{ route('reports.export') }}">
+        <a class="nav-link @if(!request()->is('dashboard/reports*')) collapsed @endif" href="{{ route('reports') }}">
           <i class="bi bi-file-earmark-bar-graph-fill"></i>
           <span>Report Request</span>
         </a>
