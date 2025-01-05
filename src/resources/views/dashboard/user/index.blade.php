@@ -54,7 +54,6 @@
                           </td>
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
-                                  <a href="{{ route('users.show', $user->id) }}" class="btn btn-success">Detail</a>
                                   <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edit</a>
                                   <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                     @csrf

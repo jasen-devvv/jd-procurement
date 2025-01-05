@@ -7,6 +7,7 @@ use App\Enums\ProfileGender;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -31,7 +32,7 @@ class ProfileController extends Controller
             'full_name' => 'nullable',
             'about' => 'nullable',
             'address' => 'nullable',
-            'gender' => 'nullable',
+            'gender' => ['nullable', Rule::enum(ProfileGender::class)],
             'phone' => 'nullable'
         ]);
 
