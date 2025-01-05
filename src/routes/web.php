@@ -49,7 +49,10 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
         // Users Management Routesonly
         Route::resource('users', UserController::class);
         
-        // Export
-        Route::get('/reports/export', [RequestController::class, 'export'])->name('reports.export');
+        // Reports
+        Route::get('/reports', [DashboardController::class, 'reports'])->name('reports');
+        Route::get('/reports/{id}', [DashboardController::class, 'detail'])->name('reports.detail');
+        Route::get('/reports/{id}/pdf', [DashboardController::class, 'pdf'])->name('reports.pdf');
+        Route::get('/reports/{id}/excel', [DashboardController::class, 'excel'])->name('reports.excel');
     });
 });
