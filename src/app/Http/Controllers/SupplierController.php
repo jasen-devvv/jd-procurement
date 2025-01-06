@@ -58,9 +58,12 @@ class SupplierController extends Controller
     {
         $supplier = Supplier::findOrFail($id);
 
+        $averageRating = $supplier->rating_count > 0 ? $supplier->rating_total / $supplier->rating_count : 0;
+
         $data = [
             'title' => 'Supplier | E-Procurement',
-            'supplier' => $supplier
+            'supplier' => $supplier,
+            'average' => $averageRating
         ];
 
         return view('dashboard.supplier.detail', $data);
@@ -110,6 +113,20 @@ class SupplierController extends Controller
         $supplier->delete();
         Supplier::logActivity("deleted"); 
      
+        return redirect()->route('suppliers.index');
+    }
+
+    public function rating(Request $request, string $id)
+    {
+        $supplier = Supplier::findOrFail($id);
+
+        $newRating = $request->input('rating');
+
+        $supplier->rating_total += $newRating;
+        $supplier->rating_count += 1;
+
+        $supplier->save();
+
         return redirect()->route('suppliers.index');
     }
 }
