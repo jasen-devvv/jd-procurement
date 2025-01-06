@@ -27,6 +27,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
 
     // Product Management Routes
     Route::resource('products', ProductController::class)->except(['show']);
+    Route::patch('/suppliers/{id}/rating', [SupplierController::class, 'rating'])->name('suppliers.rating');
     
     Route::middleware(['role:staff'])->group(function() {
         // Request Management Routes
