@@ -45,7 +45,7 @@
                           <td>{{ $supplier->name }}</td>
                           <td>{{ $supplier->contact }}</td>
                           <td>{{ $supplier->address }}</td>
-                          <td>{{ $supplier->rating }}</td>
+                          <td>{{ $supplier->rating_count > 0 ? $supplier->rating_total / $supplier->rating_count : 0 }}</td>
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
                                   <a href="{{ route('suppliers.show', $supplier->id) }}" class="btn btn-success">Detail</a>
