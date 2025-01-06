@@ -3,3 +3,25 @@
     color: red;
     font-weight: bold;
 }
+
+/* Rating */
+.rating {
+    direction: rtl;
+    display: inline-block;
+  }
+  .rating input {
+    display: none;
+  }
+  .rating label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .rating input:checked ~ label {
+    color: gold;
+  }
+  .rating input:hover ~ label,
+  .rating input:checked + label:hover {
+    color: #f9a825;
+  }
