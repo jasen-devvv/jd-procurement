@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('contact');
             $table->string('address');
-            $table->integer('rating_total')->default(0);
-            $table->integer('rating_count')->default(0);
             $table->timestamps();
         });
     }
