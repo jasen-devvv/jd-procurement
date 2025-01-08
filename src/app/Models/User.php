@@ -58,4 +58,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public static function activity($eventName)
+    {
+        activity('user')
+            ->causedBy(Auth::user())
+            ->performedOn(new self())
+            ->log("User {$eventName}");
+    }
 }
