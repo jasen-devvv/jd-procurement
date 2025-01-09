@@ -14,9 +14,7 @@ class Supplier extends Model
     protected $fillable = [
         'name',
         'contact',
-        'address',
-        'rating_total',
-        'rating_count'
+        'address'
     ];
 
     public function products(): HasMany
@@ -24,12 +22,12 @@ class Supplier extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function requests(): HasMany
+    public function ratings(): HasMany
     {
-        return $this->hasMany(Request::class);
+        return $this->hasMany(SupplierRating::class);
     }
 
-    public static function logActivity($eventName)
+    public static function activity($eventName)
     {
         activity("supplier")
             ->causedBy(Auth::user())
