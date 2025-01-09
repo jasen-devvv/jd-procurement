@@ -6,6 +6,7 @@ use App\Enums\ProfileGender;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Profile extends Model
 {
@@ -13,7 +14,7 @@ class Profile extends Model
 
     protected $fillable = [
         'user_id',
-        'full_name',
+        'name',
         'about',
         'gender',
         'phone',
@@ -27,7 +28,12 @@ class Profile extends Model
         ];
     }
 
-    public static function logActivity($eventName)
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public static function activity($eventName)
     {
         activity('profile')
             ->causedBy(Auth::user())
