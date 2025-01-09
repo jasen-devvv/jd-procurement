@@ -2,32 +2,26 @@
 
 namespace App\Models;
 
-use App\Enums\RequestStatus;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
-class Request extends Model
+class Order extends Model
 {
-    
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'supplier_id',
-        'name',
+        'product_id',
         'description',
         'quantity',
         'deadline',
-        'status',
-        'rejection_reason'
+        'status'
     ];
 
     protected function casts(): array 
     {
         return [
-            'status' => RequestStatus::class
+            'status' => OrderStatus::class
         ];
     }
 
@@ -36,16 +30,16 @@ class Request extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function supplier(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public static function logActivity($eventName)
+    public static function activity($eventName)
     {
-        activity('request')
+        activity('order')
             ->causedBy(Auth::user())
             ->performedOn(new self())
-            ->log("Request {$eventName}");
+            ->log("Order {$eventName}");
     }
 }
