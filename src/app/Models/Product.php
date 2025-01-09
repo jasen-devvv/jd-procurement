@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
@@ -18,12 +19,17 @@ class Product extends Model
         'price'
     ];
 
-    public function Supplier(): BelongsTo
+    public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    public static function logActivity($eventName)
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public static function activity($eventName)
     {
         activity('product')
             ->causedBy(Auth::user()) 
