@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RequestController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -23,37 +23,54 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/change/password', [ProfileController::class, 'change_password'])->name('profile.change_password');
-
-    // Product Management Routes
-    Route::resource('products', ProductController::class)->except(['show']);
-    Route::patch('/suppliers/{id}/rating', [SupplierController::class, 'rating'])->name('suppliers.rating');
+    Route::put('/profile/password', [ProfileController::class, 'change_password'])->name('profile.change_password');
     
+    // Rating
+    Route::patch('/suppliers/{supplier}/rating', [SupplierController::class, 'rating'])->name('suppliers.rating');
+    
+    // STAFF ONLY
     Route::middleware(['role:staff'])->group(function() {
-        // Request Management Routes
-        Route::resource('requests', RequestController::class);
-
-        // Supplier Management Routes
-        Route::resource('suppliers', SupplierController::class)->only(['index']);
+        // Order 
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+        Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+        Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
+        Route::match(['put', 'patch'], '/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+        Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     });  
     
+    // ADMIN ONLY
     Route::middleware(['role:admin'])->group(function() {
-        // Approval Routes
-        Route::patch('/requests/{id}/status', [RequestController::class, 'status'])->name('requests.status');
+        // Product
+        Route::resource('products', ProductController::class)->except(['show']);
 
-        // Request Management Routes
-        Route::resource('requests', RequestController::class)->only(['index', 'show']);
+        // Accept Order
+        Route::patch('/orders/{order}/status', [OrderController::class, 'status'])->name('orders.status');
 
-        // Supplier Management Routes
+        // Supplier 
         Route::resource('suppliers', SupplierController::class);
     
-        // Users Management Routesonly
+        // Users
         Route::resource('users', UserController::class);
         
         // Reports
         Route::get('/reports', [DashboardController::class, 'reports'])->name('reports');
-        Route::get('/reports/{id}', [DashboardController::class, 'detail'])->name('reports.detail');
-        Route::get('/reports/{id}/pdf', [DashboardController::class, 'pdf'])->name('reports.pdf');
-        Route::get('/reports/{id}/excel', [DashboardController::class, 'excel'])->name('reports.excel');
+        Route::get('/reports/{report}', [DashboardController::class, 'detail'])->name('reports.detail');
+        Route::get('/reports/{report}/pdf', [DashboardController::class, 'pdf'])->name('reports.pdf');
+        Route::get('/reports/{report}/excel', [DashboardController::class, 'excel'])->name('reports.excel');
     });
+
+    // STAFF AND ADMIN
+    Route::middleware(['role:admin|staff'])->group(function() {
+        // Product 
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+        // Supplier 
+        Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+        Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
+
+        // Order 
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+    });  
 });
