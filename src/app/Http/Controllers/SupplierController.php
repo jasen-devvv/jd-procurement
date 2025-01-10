@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\SupplierRating;
+use App\Enums\RatingStar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class SupplierController extends Controller
 {
@@ -12,7 +16,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::withAvg('ratings as rating_avg', 'rating')->get();
 
         $data = [
             'title' => 'Supplier | E-Procurement',
@@ -40,13 +44,13 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $validData = $request->validate([
-            'name' => 'required|string',
-            'contact' => 'required|string',
-            'address' => 'required|string',
+            'name' => ['required', 'string'],
+            'contact' => ['required', 'string'],
+            'address' => ['required', 'string'],
         ]);
 
         Supplier::create($validData);
-        Supplier::logActivity("created");
+        Supplier::activity("created");
 
         return redirect()->route('suppliers.index');
     }
@@ -57,13 +61,18 @@ class SupplierController extends Controller
     public function show(string $id)
     {
         $supplier = Supplier::findOrFail($id);
+        $userId = Auth::id();
+        $supplierRating = SupplierRating::where('user_id', $userId)->where('supplier_id', $id)->first();
 
-        $averageRating = $supplier->rating_count > 0 ? $supplier->rating_total / $supplier->rating_count : 0;
+        $rating = [
+            'rating' => $supplierRating->rating ?? null,
+            'review' => $supplierRating->review ?? '',
+        ];
 
         $data = [
             'title' => 'Supplier | E-Procurement',
             'supplier' => $supplier,
-            'average' => $averageRating
+            'rating' => $rating
         ];
 
         return view('dashboard.supplier.detail', $data);
@@ -92,13 +101,13 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
 
         $validData = $request->validate([
-            'name' => 'required|string',
-            'contact' => 'required|string',
-            'address' => 'required|string',
+            'name' => ['required', 'string'],
+            'contact' => ['required', 'string'],
+            'address' => ['required', 'string'],
         ]);
 
         $supplier->update($validData);
-        Supplier::logActivity("updated");
+        Supplier::activity("updated");
 
         return redirect()->route('suppliers.index');
     }
@@ -111,21 +120,28 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
 
         $supplier->delete();
-        Supplier::logActivity("deleted"); 
+        Supplier::activity("deleted"); 
      
         return redirect()->route('suppliers.index');
     }
 
     public function rating(Request $request, string $id)
     {
-        $supplier = Supplier::findOrFail($id);
+        $userId = Auth::id();
 
-        $newRating = $request->input('rating');
+        $validData = $request->validate([
+            'rating' => ['required'],
+            'review' => ['nullable']
+        ]);
 
-        $supplier->rating_total += $newRating;
-        $supplier->rating_count += 1;
-
-        $supplier->save();
+        SupplierRating::updateOrCreate([
+            'supplier_id' => $id,
+            'user_id' => $userId
+        ],
+        [
+            'rating' => $validData['rating'],
+            'review' => $validData['review'],
+        ]);
 
         return redirect()->route('suppliers.index');
     }
