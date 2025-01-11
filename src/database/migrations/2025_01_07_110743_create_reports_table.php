@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('range_start');
-            $table->date('range_end');
+            $table->datetime('date_start');
+            $table->datetime('date_end');
             $table->integer('total_orders')->default(0);
             $table->integer('total_products')->default(0);
             $table->integer('total_suppliers')->default(0);
             $table->unsignedBigInteger('top_product_id')->nullable();
+            $table->integer('top_product_total')->default(0);
             $table->unsignedBigInteger('top_supplier_id')->nullable();
+            $table->integer('top_supplier_total')->default(0);
             $table->timestamps();
         });
     }
