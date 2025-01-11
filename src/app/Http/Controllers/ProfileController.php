@@ -39,7 +39,7 @@ class ProfileController extends Controller
         $userId = Auth::id();
 
         $profile = Profile::updateOrCreate(['user_id' => $userId], $validData);
-        Profile::logActivity('updated');
+        Profile::activity('updated');
 
         return redirect()->route('profile');
     }
@@ -59,6 +59,7 @@ class ProfileController extends Controller
 
         $user->password = $validData['new_password'];
         $user->save();
+        Profile::activity('changed password');
         
         return redirect()->route('profile');
     }
