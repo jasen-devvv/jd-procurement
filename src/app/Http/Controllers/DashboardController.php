@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Supplier;
-use App\Models\Request as ModelsRequest;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Spatie\Activitylog\Models\Activity;
@@ -43,21 +43,21 @@ class DashboardController extends Controller
 
         $productCount = Product::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
         $supplierCount = Supplier::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
-        $requestCount = ModelsRequest::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
+        $orderCount = Order::whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate)->count();
 
         $previousProductCount = Product::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
         $previousSupplierCount = Supplier::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
-        $previousRequestCount = ModelsRequest::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
+        $previousOrderCount = Order::whereBetween('created_at', [$previousStartDate, $previousEndDate])->count();
 
         $productPercentageChange = parent::calculatePercentageChange($productCount, $previousProductCount);
         $supplierPercentageChange = parent::calculatePercentageChange($supplierCount, $previousSupplierCount);
-        $requestPercentageChange = parent::calculatePercentageChange($requestCount, $previousRequestCount);
+        $orderPercentageChange = parent::calculatePercentageChange($orderCount, $previousOrderCount);
 
         // Activity Logs
         $recentActivities = Activity::orderBy('created_at', 'desc')->where('causer_id', auth()->user()->id)->take(5)->get();
 
         // Requests
-        $requests = ModelsRequest::with(['supplier'])->get();
+        $orders = Order::with(['product'])->get();
 
          // Data chart
          $productData = Product::selectRaw('DATE(created_at) as date, COUNT(*) as count')
@@ -70,7 +70,7 @@ class DashboardController extends Controller
                 ->orderBy('date')
                 ->get();
 
-        $requestData = ModelsRequest::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+        $orderData = Order::selectRaw('DATE(created_at) as date, COUNT(*) as count')
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
@@ -79,15 +79,15 @@ class DashboardController extends Controller
             'title' => 'Dashboard | E-Procurement',
             'productCount' => $productCount,
             'supplierCount' => $supplierCount,
-            'requestCount' => $requestCount,
+            'orderCount' => $orderCount,
             'productPercentageChange' => $productPercentageChange,
             'supplierPercentageChange' => $supplierPercentageChange,
-            'requestPercentageChange' => $requestPercentageChange,
+            'orderPercentageChange' => $orderPercentageChange,
             'recentActivities' => $recentActivities,
-            'requests' => $requests,
+            'orders' => $orders,
             'productData' => $productData,
             'supplierData' => $supplierData,
-            'requestData' => $requestData
+            'orderData' => $orderData
         ];
 
         return view('dashboard.index', $data);
