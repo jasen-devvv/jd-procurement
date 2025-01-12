@@ -18,19 +18,17 @@
         </a>
       </li><!-- End Dashboard Nav -->
 
-      @role('admin') 
       <li class="nav-item">
         <a class="nav-link @if(!request()->is('dashboard/products*')) collapsed @endif" href="{{ route('products.index') }}">
           <i class="bi bi-box-fill"></i>
           <span>Product</span>
         </a>
       </li><!-- End Dashboard Nav -->
-      @endrole
 
       <li class="nav-item">
-        <a class="nav-link @if(!request()->is('dashboard/requests*')) collapsed @endif" href="{{ route('requests.index') }}">
+        <a class="nav-link @if(!request()->is('dashboard/orders*')) collapsed @endif" href="{{ route('orders.index') }}">
           <i class="bi bi-arrow-left-right"></i>
-          <span>Request</span>
+          <span>Order</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
@@ -49,7 +47,7 @@
       <li class="nav-item">
         <a class="nav-link @if(!request()->is('dashboard/reports*')) collapsed @endif" href="{{ route('reports') }}">
           <i class="bi bi-file-earmark-bar-graph-fill"></i>
-          <span>Report Request</span>
+          <span>Report Monthly</span>
         </a>
       </li><!-- End Profile Page Nav --> 
       @endrole

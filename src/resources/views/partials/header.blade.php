@@ -2,7 +2,7 @@
 
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
         <img src="{{ asset('img/logo.png') }}" alt="Logo">
         <span class="d-none d-lg-block">E-Procurement</span>
       </a>
@@ -17,12 +17,12 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="{{ asset('img/profile-img.jpg') }}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{ auth()->user()->name }}</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ auth()->user()->username }}</span>
           </a><!-- End Profile Image Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>{{ auth()->user()->name }}</h6>
+              <h6>{{ auth()->user()->username }}</h6>
               <span>{{ auth()->user()->roles[0]->name }}</span>
             </li>
             <li>
