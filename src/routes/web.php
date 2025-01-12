@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 
 // Authentication Routes
@@ -53,10 +54,10 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
         Route::resource('users', UserController::class);
         
         // Reports
-        Route::get('/reports', [DashboardController::class, 'reports'])->name('reports');
-        Route::get('/reports/{report}', [DashboardController::class, 'detail'])->name('reports.detail');
-        Route::get('/reports/{report}/pdf', [DashboardController::class, 'pdf'])->name('reports.pdf');
-        Route::get('/reports/{report}/excel', [DashboardController::class, 'excel'])->name('reports.excel');
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+        Route::get('/reports/{report}', [ReportController::class, 'detail'])->name('reports.detail');
+        Route::get('/reports/{report}/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
+        Route::get('/reports/{report}/excel', [ReportController::class, 'excel'])->name('reports.excel');
     });
 
     // STAFF AND ADMIN
@@ -71,6 +72,5 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function() {
         // Order 
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-
     });  
 });
