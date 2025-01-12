@@ -25,13 +25,13 @@
                     <p class="text-center small opacity-75">Enter your email & password to login</p>
                   </div>
 
-                  <form class="row g-3 needs-validation @if($errors->any()) was-validated @endif" action="{{ route('login') }}" method="POST" novalidate>
+                  <form class="row g-3" action="{{ route('login') }}" method="POST">
                     @csrf
                     <div class="col-12">
                       <label for="email" class="form-label">Email</label>
-                      <div class="input-group @error('email') has-validation @enderror">
+                      <div class="input-group">
                         <span class="input-group-text" id="emailGroup"><i class="bi bi-envelope-fill"></i></span>
-                        <input type="email" name="email" class="form-control" value="{{ old('email') }}" id="email" placeholder="enter your email" required>
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" id="email" placeholder="enter your email">
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -40,9 +40,9 @@
 
                     <div class="col-12">
                       <label for="password" class="form-label">Password</label>
-                      <div class="input-group @error('password') has-validation @enderror">
+                      <div class="input-group has-validation">
                         <span class="input-group-text" id="passwordGroup"><i class="bi bi-lock-fill"></i></span>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="enter your password" required>
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="enter your password">
                         <span class="input-group-text" id="passwordShow"><i class="bi bi-eye-slash-fill"></i></span>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
