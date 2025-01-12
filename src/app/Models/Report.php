@@ -23,4 +23,14 @@ class Report extends Model
         'date_start' => 'datetime',
         'date_end' => 'datetime',
     ];
+
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'id', 'top_product_id');
+    }
+
+    public function supplier()
+    {
+        return $this->hasOne(Supplier::class, 'id', 'top_supplier_id');
+    }
 }
