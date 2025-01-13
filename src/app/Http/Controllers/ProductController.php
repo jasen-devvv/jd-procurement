@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the product.
      */
     public function index()
     {
@@ -24,7 +24,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new product.
      */
     public function create()
     {
@@ -39,15 +39,15 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created product in storage.
      */
     public function store(Request $request)
     {
         $validData = $request->validate([
-            'supplier_id' => 'required',
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required',
+            'supplier_id' => ['required'],
+            'name' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
+            'price' => ['required'],
         ], [
             'supplier_id' => 'The supplier field is required'
         ]);
@@ -55,11 +55,11 @@ class ProductController extends Controller
         Product::create($validData);
         Product::activity("created");
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'Product has been successfully added.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified product.
      */
     public function show(string $id)
     {
@@ -73,7 +73,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified product.
      */
     public function edit(string $id)
     {
@@ -89,16 +89,16 @@ class ProductController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified product in storage.
      */
     public function update(Request $request, string $id)
     {
         $product = Product::findOrFail($id);
         $validData = $request->validate([
-            'supplier_id' => 'required',
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required',
+            'supplier_id' => ['required'],
+            'name' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
+            'price' => ['required'],
         ], [
             'supplier_id' => 'The supplier field is required'
         ]);
@@ -106,11 +106,11 @@ class ProductController extends Controller
         $product->update($validData);
         Product::activity("updated");
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'Product details have been successfully updated.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified product from storage.
      */
     public function destroy(string $id)
     {
@@ -119,6 +119,6 @@ class ProductController extends Controller
         $product->delete();
         Product::activity("deleted");
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'Product has been successfully deleted.');
     }
 }
