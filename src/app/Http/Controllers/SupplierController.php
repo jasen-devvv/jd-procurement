@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 class SupplierController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the supplier.
      */
     public function index()
     {
@@ -27,7 +27,7 @@ class SupplierController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new supplier.
      */
     public function create()
     {
@@ -39,7 +39,7 @@ class SupplierController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created supplier in storage.
      */
     public function store(Request $request)
     {
@@ -52,16 +52,16 @@ class SupplierController extends Controller
         Supplier::create($validData);
         Supplier::activity("created");
 
-        return redirect()->route('suppliers.index');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier has been successfully added.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified supplier.
      */
     public function show(string $id)
     {
-        $supplier = Supplier::findOrFail($id);
         $userId = Auth::id();
+        $supplier = Supplier::findOrFail($id);
         $supplierRating = SupplierRating::where('user_id', $userId)->where('supplier_id', $id)->first();
 
         $rating = [
@@ -79,11 +79,11 @@ class SupplierController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified supplier.
      */
     public function edit(string $id)
     {
-        $supplier = Supplier::find($id);
+        $supplier = Supplier::findOrFail($id);
 
         $data = [
             'title' => 'Supplier | E-Procurement',
@@ -94,11 +94,11 @@ class SupplierController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified supplier in storage.
      */
     public function update(Request $request, string $id)
     {
-        $supplier = Supplier::find($id);
+        $supplier = Supplier::findOrFail($id);
 
         $validData = $request->validate([
             'name' => ['required', 'string'],
@@ -109,11 +109,11 @@ class SupplierController extends Controller
         $supplier->update($validData);
         Supplier::activity("updated");
 
-        return redirect()->route('suppliers.index');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier details have been successfully updated.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified supplier from storage.
      */
     public function destroy(string $id)
     {
@@ -122,9 +122,12 @@ class SupplierController extends Controller
         $supplier->delete();
         Supplier::activity("deleted"); 
      
-        return redirect()->route('suppliers.index');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier has been successfully deleted.');
     }
 
+    /**
+     * Store or Update rating the specified supplier from storage.
+     */
     public function rating(Request $request, string $id)
     {
         $userId = Auth::id();
@@ -143,6 +146,6 @@ class SupplierController extends Controller
             'review' => $validData['review'],
         ]);
 
-        return redirect()->route('suppliers.index');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier rating has been successfully saved.');
     }
 }
