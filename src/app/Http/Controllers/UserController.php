@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the user.
      */
     public function index()
     {
@@ -26,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new user.
      */
     public function create()
     {
@@ -40,15 +40,15 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
      */
     public function store(Request $request)
     {
         $validData = $request->validate([
-            'username' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'role' => 'required'
+            'username' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+            'role' => ['required']
         ]);
 
         $user = User::create([
@@ -58,12 +58,13 @@ class UserController extends Controller
         ]);
 
         $user->assignRole($validData['role']);
+        User::activity("created");
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'User has been successfully added.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
      */
     public function show(string $id)
     {
@@ -78,7 +79,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified user.
      */
     public function edit(string $id)
     {
@@ -95,16 +96,16 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user in storage.
      */
     public function update(Request $request, string $id)
     {
         $user = User::find($id);
         $validData = $request->validate([
-            'username' => 'required',
-            'email' => 'required|email',
-            'password' => 'sometimes',
-            'role' => 'required'
+            'username' => ['required'],
+            'email' => ['required|email'],
+            'password' => ['sometimes'],
+            'role' => ['required']
         ]);
 
         $updatedData = [
@@ -118,19 +119,21 @@ class UserController extends Controller
         
         $user->update($updatedData);
         $user->syncRoles($validData['role']);
+        User::activity("updated");
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'User details have been successfully updated.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      */
     public function destroy(string $id)
     {
         $user = User::find($id);
 
         $user->delete();
+        User::activity("Deleted");
      
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'User has been successfully deleted.');
     }
 }
