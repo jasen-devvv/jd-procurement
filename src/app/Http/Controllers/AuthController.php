@@ -29,7 +29,7 @@ class AuthController extends Controller
         if(Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('dashboard')->with('success', 'Welcome back! You have successfully logged in.');
         }
 
         return redirect()->back()->withErrors(['error' => 'The provided credentials do not match our records.'])->onlyInput('email');
@@ -41,6 +41,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'You have successfully logged out.');
     }
 }
