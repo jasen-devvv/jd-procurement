@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the order.
      */
     public function index()
     {
@@ -31,11 +31,11 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new order.
      */
     public function create()
     {
-        $products = Product::all();
+        $products = Product::with(['supplier'])->get();
         $status = OrderStatus::cases();
 
         $data = [
@@ -48,16 +48,16 @@ class OrderController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created order in storage.
      */
     public function store(Request $request)
     {
         $userId = Auth::id();
         $validData = $request->validate([
-            'product_id' => 'required',
-            'description' => 'nullable|string',
-            'quantity' => 'required',
-            'deadline' => 'required|date',
+            'product_id' => ['required'],
+            'description' => ['nullable', 'string'],
+            'quantity' => ['required'],
+            'deadline' => ['required', 'date'],
         ], [
             'product_id' => 'The product field is required.',
         ]);
@@ -67,11 +67,11 @@ class OrderController extends Controller
         Order::create($validData);
         Order::activity("created");
 
-        return redirect()->route('orders.index');
+        return redirect()->route('orders.index')->with('success', 'Order has been successfully created.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified order.
      */
     public function show(string $id)
     {
@@ -86,11 +86,11 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified order.
      */
     public function edit(string $id)
     {
-        $products = Product::all();
+        $products = Product::with(['supplier'])->get();
         $order = Order::findOrFail($id);
         $status = OrderStatus::cases();
 
@@ -105,16 +105,16 @@ class OrderController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified order in storage.
      */
     public function update(Request $request, string $id)
     {
         $requestData = Order::findOrFail($id);
         $validData = $request->validate([
-            'product_id' => 'required',
-            'description' => 'nullable|string',
-            'quantity' => 'required',
-            'deadline' => 'required|date',
+            'product_id' => ['required'],
+            'description' => ['nullable', 'string'],
+            'quantity' => ['required'],
+            'deadline' => ['required', 'date'],
         ], [
             'product_id' => 'The product field is required.',
         ]);
@@ -122,11 +122,11 @@ class OrderController extends Controller
         $requestData->update($validData);
         Order::activity("updated");
 
-        return redirect()->route('orders.index');
+        return redirect()->route('orders.index')->with('success', 'Order has been successfully updated.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified order from storage.
      */
     public function destroy(string $id)
     {
@@ -135,9 +135,12 @@ class OrderController extends Controller
         $request->delete($id);
         Order::activity("deleted");
 
-        return redirect()->route('orders.index');
+        return redirect()->route('orders.index')->with('success', 'Order has been successfully deleted.');
     }
 
+    /**
+     * Update status the specified order from storage.
+     */
     public function status(Request $request, string $id) 
     {
         $validData = $request->validate([
@@ -151,6 +154,6 @@ class OrderController extends Controller
 
         Order::activity("updated status");
         
-        return redirect()->route('orders.index');
+        return redirect()->route('orders.index')->with('success', 'Order status has been successfully updated.');
     }
 }
