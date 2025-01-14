@@ -11,6 +11,14 @@ use Spatie\Activitylog\Models\Activity;
 
 class DashboardController extends Controller
 {
+    /**
+     * Display the main dashboard page :
+     * - Widget Card (Supplier, Product, Order)
+     * - Recent Activities
+     * - Calendar
+     * - Daily Chart
+     * - Recent Orders
+     */
     public function index(Request $request)
     {
         $period = $request->get('period', 'daily');

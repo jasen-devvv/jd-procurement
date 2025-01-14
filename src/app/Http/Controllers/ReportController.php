@@ -11,6 +11,9 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
+    /**
+     * Display a listing of the report.
+     */
     public function index()
     {
         $reports = Report::all();
@@ -23,6 +26,9 @@ class ReportController extends Controller
         return view('dashboard.report.index', $data);
     }
 
+    /**
+     * Display the specified report.
+     */
     public function detail(string $id)
     {
         $report = Report::with(['product', 'supplier'])->findOrFail($id);
@@ -35,7 +41,9 @@ class ReportController extends Controller
         return view('dashboard.report.detail', $data);
     }
     
-    
+    /**
+     * Print to PDF the specified report.
+     */
     public function pdf(string $id)
     {
         $report = Report::with(['supplier', 'product'])->findOrFail($id);
@@ -51,6 +59,9 @@ class ReportController extends Controller
         return view('dashboard.report.print', $data);
     }
 
+    /**
+     * Print to EXCEL .xlsx the specified report.
+     */
     public function excel(string $id)
     {
         $year = Carbon::now()->year;
