@@ -70,6 +70,57 @@
             })
             calendar.render()
         }
+
+        // Sweetalert
+        var buttonDelete = document.querySelector('.btn-delete')
+        var formDelete = document.querySelector('#deleteForm')
+
+        if(buttonDelete) {
+            buttonDelete.addEventListener('click', function(e) {
+                e.preventDefault()
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Are you sure you want to delete this?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        formDelete.submit()
+                    }
+                })
+            })
+        }
+
+        // Password Toggle
+        var passwordToggle = document.querySelectorAll('.password-toggle');
+        if(passwordToggle) {
+            passwordToggle.forEach((span) => {
+                span.addEventListener('click', function() {
+                    const input = span.previousElementSibling;
+                    const icon = span.querySelector('i');
+
+                    if(input && icon) {
+                        if(input.type === 'password') {
+                            input.type = 'text';
+                            icon.className = 'bi-eye-fill';
+                        } else {
+                            input.type = 'password';
+                            icon.className = 'bi-eye-slash-fill';
+                        }
+                    }
+                })
+            })
+        }
+
+        // Toast Bootstrap
+        var toastElements = document.querySelectorAll('.toast');
+        if(toastElements) {
+            toastElements.forEach(function (toastElement) {
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show(); 
+            });
+        }
     });
 
     document.body.addEventListener("input", function (e) {        
@@ -95,7 +146,17 @@
             if (rupiahNumberInputs && rupiahDecimalInputs) {
                 let numberValue = rupiahNumberInputs.value.replace(/\./g, '')
                 let decimalValue = rupiahDecimalInputs.value.replace(/,/g, '')
-                let fullValue = numberValue + '.' + decimalValue
+                let fullValue;
+
+                if(numberValue) {
+                    if(decimalValue) {
+                        fullValue = numberValue + '.' + decimalValue
+                    } else {
+                        fullValue = numberValue + '.00'
+                    }
+                } else {
+                    fullValue = null
+                }
                 
                 rupiahHiddenInputs.value = fullValue
             }
