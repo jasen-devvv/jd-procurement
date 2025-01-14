@@ -43,7 +43,7 @@
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="passwordGroup"><i class="bi bi-lock-fill"></i></span>
                         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="enter your password">
-                        <span class="input-group-text" id="passwordShow"><i class="bi bi-eye-slash-fill"></i></span>
+                        <span class="input-group-text password-toggle"><i class="bi bi-eye-slash-fill"></i></span>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
