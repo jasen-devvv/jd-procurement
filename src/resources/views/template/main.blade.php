@@ -43,14 +43,43 @@
 </head>
 
 <body>
-
   <!-- ======= Header ======= -->
   @include('partials.header')
 
   <!-- ======= Sidebar ======= -->
   @include('partials.sidebar')
 
-  <main id="main" class="main">
+
+  <main id="main" class="main position-relative">
+    <div class="toast-container position-absolute top-0 end-0 p-3">
+      @if(session('success'))
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="toast-header">
+          <span class="rounded me-2 bg-success text-white py-1 px-2"><i class="bi bi-check-circle"></i></span>
+          <strong class="me-auto">Success</strong>
+          <small class="text-body-secondary">just now</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          {{ session('success') }}
+        </div>
+      </div>
+      @endif
+      
+      @if(session('failed'))
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="toast-header">
+          <span class="rounded me-2 bg-danger text-white py-1 px-2"><i class="bi bi-x-circle"></i></span>
+          <strong class="me-auto">Error</strong>
+          <small class="text-body-secondary">just now</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          {{ session('failed') }}
+        </div>
+      </div>
+      @endif
+    </div>
 
     @yield('breadcrumbs')
 
