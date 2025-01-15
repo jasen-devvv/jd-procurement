@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -20,10 +21,13 @@ class ProfileController extends Controller
         $userId = Auth::id();
         $profile = Profile::where('user_id', $userId)->first();
 
+        $activeTab = session('activeTab', 'profile-overview');
+
         $data = [
             'title' => 'Profile | E-Procurement',
             'genders' => $genders,
-            'profile' => $profile
+            'profile' => $profile,
+            'activeTab' => $activeTab
         ];
 
         return view('dashboard.profile', $data);
@@ -47,7 +51,7 @@ class ProfileController extends Controller
         $profile = Profile::updateOrCreate(['user_id' => $userId], $validData);
         Profile::activity('updated');
 
-        return redirect()->route('profile')->with('success', 'Your profile has been successfully updated.');
+        return redirect()->route('profile')->with('success', 'Your profile has been successfully updated.')->with('activeTab', 'profile-edit');
     }
 
     /**
@@ -55,15 +59,20 @@ class ProfileController extends Controller
      */
     public function change_password(Request $request)
     {
-        $validData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'old_password' => ['required'],
-            'new_password' => ['required', 'confirmed'],
+            'new_password' => ['required', 'min:8', 'confirmed'],
         ]);
 
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->with('activeTab', 'profile-change-password');
+        }
+
         $user = Auth::user();
+        $validData = $validator->validated();
 
         if(!Hash::check($validData['old_password'], $user->password)) {
-            return redirect()->back()->with('failed', 'The current password you entered is incorrect.');
+            return redirect()->back()->with('failed', 'The current password you entered is incorrect.')->with('activeTab', 'profile-change-password');
         }
 
         $user->password = $validData['new_password'];
@@ -71,6 +80,6 @@ class ProfileController extends Controller
 
         Profile::activity('changed password');
         
-        return redirect()->route('profile')->with('success', 'Your password has been successfully changed.');
+        return redirect()->back()->with('success', 'Your password has been successfully changed.')->with('activeTab', 'profile-change-password');
     }
 }
