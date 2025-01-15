@@ -21,19 +21,10 @@
           <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
             <img src="{{ asset('img/profile-img.jpg') }}" alt="Profile" class="rounded-circle">
-            <h2>{{ auth()->user()->name }}</h2>
+            <h2>{{ auth()->user()->username }}</h2>
             <h3>{{ auth()->user()->roles[0]->name }}</h3>
           </div>
         </div>
-
-        @if($errors->any())
-          @foreach($errors->all() as $error)
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              {{ $error }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          @endforeach
-        @endif
 
       </div>
 
@@ -45,22 +36,23 @@
             <ul class="nav nav-tabs nav-tabs-bordered">
 
               <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                <button class="nav-link {{ $activeTab == 'profile-overview' ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
               </li>
 
               <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                <button class="nav-link {{ $activeTab == 'profile-edit' ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
               </li>
 
               <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                <button class="nav-link {{ $activeTab == 'profile-change-password' ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
               </li>
 
             </ul>
+
             <div class="tab-content pt-2">
            
 
-              <div class="tab-pane fade show active profile-overview" id="profile-overview">
+              <div class="tab-pane fade {{ $activeTab == 'profile-overview' ? 'show active' : '' }} profile-overview" id="profile-overview">
                 <h5 class="card-title">About</h5>
                 <p class="small fst-italic">{{ $profile->about ?? '' }}</p>
 
@@ -68,27 +60,27 @@
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label ">Full Name</div>
-                  <div class="col-lg-9 col-md-8">{{ $profile->full_name }}</div>
+                  <div class="col-lg-9 col-md-8">{{ $profile->name ?? "" }}</div>
                 </div>
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Gender</div>
-                  <div class="col-lg-9 col-md-8">{{ $profile->gender }}</div>
+                  <div class="col-lg-9 col-md-8">{{ $profile->gender ?? "" }}</div>
                 </div>
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Phone</div>
-                  <div class="col-lg-9 col-md-8">{{ $profile->phone }}</div>
+                  <div class="col-lg-9 col-md-8">{{ $profile->phone ?? "" }}</div>
                 </div>
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Address</div>
-                  <div class="col-lg-9 col-md-8">{{ $profile->address }}</div>
+                  <div class="col-lg-9 col-md-8">{{ $profile->address ?? ""  }}</div>
                 </div>
 
               </div>
 
-              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+              <div class="tab-pane fade {{ $activeTab == 'profile-edit' ? 'show active' : '' }} profile-edit pt-3" id="profile-edit">
 
                 <!-- Profile Edit Form -->
                 <form method="POST" action="{{ route('profile.update') }}">
@@ -97,7 +89,7 @@
                   <div class="row mb-3">
                     <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
                     <div class="col-md-8 col-lg-9">
-                      <input type="text" name="full_name" class="form-control" id="fullName" placeholder="Full name" value="{{ $profile->full_name ?? '' }}">
+                      <input type="text" name="name" class="form-control" id="fullName" placeholder="Full name" value="{{ $profile->name ?? '' }}">
                     </div>
                   </div>
 
@@ -113,7 +105,7 @@
                     <div class="col-md-8 col-lg-9">
                     @foreach($genders as $gender)
                       <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="{{ $gender->name }}" value="{{ $gender->value }}" @if($profile->gender->name == $gender->name) checked @endif>
+                        <input class="form-check-input" type="radio" name="gender" id="{{ $gender->name }}" value="{{ $gender->value }}" @if($profile?->gender?->name == $gender->name) checked @endif>
                         <label class="form-check-label" for="{{ $gender->name }}">
                           {{ $gender->name }}
                         </label>
@@ -143,29 +135,53 @@
 
               </div>
 
-              <div class="tab-pane fade pt-3" id="profile-change-password">
+              <div class="tab-pane fade {{ $activeTab == 'profile-change-password' ? 'show active' : '' }} pt-3" id="profile-change-password">
                 <!-- Change Password Form -->
                 <form method="POST" action={{ route('profile.change_password') }}>
                   @csrf
                   @method("PUT")
                   <div class="row mb-3">
-                    <label for="oldPassword" class="col-md-4 col-lg-3 col-form-label">Old Password</label>
+                    <div class="col-md-4 col-lg-3">
+                      <label for="oldPassword" class="col-form-label">Old Password</label>
+                    </div>
                     <div class="col-md-8 col-lg-9">
-                      <input name="old_password" type="password" class="form-control" id="oldPassword" placeholder="Your current password">
+                      <div class="input-group has-validation">
+                        <input type="password" name="old_password" class="form-control @error('old_password') is-invalid @enderror" id="oldPassword" placeholder="enter your current password">
+                        <span class="input-group-text password-toggle"><i class="bi bi-eye-slash-fill"></i></span>
+                        @error('old_password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                      </div>
                     </div>
                   </div>
 
                   <div class="row mb-3">
-                    <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                    <div class="col-md-4 col-lg-3">
+                      <label for="newPassword" class="col-form-label">New Password</label>
+                    </div>
                     <div class="col-md-8 col-lg-9">
-                      <input name="new_password" type="password" class="form-control" id="newPassword" placeholder="New password">
+                      <div class="input-group has-validation">
+                        <input type="password" name="new_password" class="form-control @error('new_password') is-invalid @enderror" id="newPassword" placeholder="enter your new password">
+                        <span class="input-group-text password-toggle"><i class="bi bi-eye-slash-fill"></i></span>
+                        @error('new_password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                      </div>
                     </div>
                   </div>
 
                   <div class="row mb-3">
-                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                    <div class="col-md-4 col-lg-3">
+                      <label for="renewPassword" class="col-form-label">Re-enter New Password</label>
+                    </div>
                     <div class="col-md-8 col-lg-9">
-                      <input name="new_password_confirmation" type="password" class="form-control" id="renewPassword" placeholder="re-enter new password">
+                      <div class="input-group has-validation">
+                        <input type="password" name="new_password_confirmation" class="form-control @error('new_password_confirmation') is-invalid @enderror" id="renewPassword" placeholder="re-enter new password">
+                        <span class="input-group-text password-toggle"><i class="bi bi-eye-slash-fill"></i></span>
+                        @error('new_password_confirmation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                      </div>
                     </div>
                   </div>
 
