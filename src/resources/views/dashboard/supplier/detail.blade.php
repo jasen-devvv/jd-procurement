@@ -30,9 +30,13 @@
 
               <ol class="list-group list-group-numbered mt-3">
                 List Products: <br/>
-                @foreach($supplier->products as $product)
+                @forelse($supplier->products as $product)
                   <li class="list-group-item">{{ $product->name }}</li>
-                @endforeach
+                @empty
+                  <div class="alert border-danger text-danger show" role="alert">
+                    Product empty.
+                  </div>
+                @endforelse
               </ol>
             </div>
             <div class="card-footer">
@@ -45,21 +49,24 @@
           <div class="card">
             <div class="card-header">Rating Supplier</div>
             <div class="card-body">
-              <form method="POST" action="{{ route('suppliers.rating', $supplier->id) }}">
+              <form class="row g-3" method="POST" action="{{ route('suppliers.rating', $supplier->id) }}">
                 @csrf
                 @method('PATCH')
-                <div class="rating">
-                  <input type="radio" name="rating" id="star5" value="5">
-                  <label for="star5" class="bi bi-star-fill"></label>
-                  <input type="radio" name="rating" id="star4" value="4">
-                  <label for="star4" class="bi bi-star-fill"></label>
-                  <input type="radio" name="rating" id="star3" value="3">
-                  <label for="star3" class="bi bi-star-fill"></label>
-                  <input type="radio" name="rating" id="star2" value="2">
-                  <label for="star2" class="bi bi-star-fill"></label>
-                  <input type="radio" name="rating" id="star1" value="1">
-                  <label for="star1" class="bi bi-star-fill"></label>
+                
+                <div class="col-12">
+                  <div class="rating">
+                    @for($i = 5; $i >= 1; $i--)
+                    <input type="radio" name="rating" id="star{{$i}}" value="{{$i}}" @if($rating['rating'] == $i) checked @endif>
+                    <label for="star{{$i}}" class="bi bi-star-fill"></label>
+                    @endfor
+                  </div>
                 </div>
+
+                <div class="col-12">
+                  <label for="review" class="form-label">Review</label>
+                  <textarea name="review" class="form-control" id="review" style="height: 100px" placeholder="Review supplier here...">{{ $rating['review'] }}</textarea>
+                </div>
+
                 <div class="mt-3">
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
