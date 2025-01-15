@@ -25,16 +25,16 @@
 
             <!-- Table with stripped rows -->
             <div class="table-responsive">
-              <table class="table table-hover datatable">
+              <table class="table table-bordered table-striped table-hover datatable">
                 <thead>
                   <tr>
                     <th width="10%">No.</th>
-                    <th width="30%">
+                    <th width="20%">
                       <b>N</b>ame
                     </th>
-                    <th width="10%">Contact</th>
-                    <th width="30%">Address</th>
-                    <th width="10%">Rating</th>
+                    <th width="20%">Contact</th>
+                    <th width="20%">Address</th>
+                    <th width="20%">Average Rating</th>
                     <th width="10%">Action</th>
                   </tr>
                 </thead>
@@ -45,7 +45,7 @@
                           <td>{{ $supplier->name }}</td>
                           <td>{{ $supplier->contact }}</td>
                           <td>{{ $supplier->address }}</td>
-                          <td>{{ $supplier->rating_count > 0 ? $supplier->rating_total / $supplier->rating_count : 0 }}</td>
+                          <td>{{ number_format($supplier->rating_avg, 2) }}</td>
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
                                   <a href="{{ route('suppliers.show', $supplier->id) }}" class="btn btn-success">Detail</a>
@@ -54,10 +54,10 @@
                                   @endcan
 
                                   @can('delete supplier')
-                                  <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
+                                  <form id="deleteForm" action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
                                     @csrf
                                     @method("DELETE")
-                                    <button type="submit" class="btn btn-danger d-inline rounded-0 rounded-end">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-delete d-inline rounded-0 rounded-end">Delete</button>
                                   </form>
                                   @endcan
                               </div>
