@@ -23,12 +23,12 @@
           <div class="card-body">
             <h5 class="card-title">Form Edit Supplier</h5>
 
-            <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" class="row g-3 needs-validation @if($errors->any()) was-validated @endif" novalidate>
+            <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" class="row g-3">
                 @csrf
                 @method('PUT')
                 <div class="col-12 required">
                   <label for="name" class="form-label">Name</label>
-                  <input type="text" class="form-control" value="{{ $supplier->name }}" name="name" id="name" placeholder="CV. Jasen Dev Technology" required>
+                  <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ $supplier->name }}" name="name" id="name" autocomplete="off" placeholder="e.g., ABC Supply Co.">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -36,7 +36,7 @@
 
                 <div class="col-12 required">
                   <label for="contact" class="form-label">Contact</label>
-                  <input type="text" class="form-control" value="{{ $supplier->contact }}" id="contact" name="contact" placeholder="0812-3456-7890" required>
+                  <input type="text" class="form-control @error('contact') is-invalid @enderror" value="{{ $supplier->contact }}" id="contact" autocomplete="off" name="contact" placeholder="e.g., +6201234567890 or email@example.com">
                     @error('contact')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -44,7 +44,7 @@
 
                 <div class="col-12 required">
                   <label for="address" class="form-label">Address</label>
-                  <input type="text" class="form-control" value="{{ $supplier->address }}" id="address" name="address" placeholder="New York 65, street 12" required>
+                  <input type="text" class="form-control @error('address') is-invalid @enderror" value="{{ $supplier->address }}" id="address" autocomplete="off" name="address" placeholder="e.g., 123 Main Street, City, Country">
                     @error('address')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
