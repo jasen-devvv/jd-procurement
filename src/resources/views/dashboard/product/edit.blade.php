@@ -23,15 +23,15 @@
           <div class="card-body">
             <h5 class="card-title">Form Edit Product</h5>
 
-            <form action="{{ route('products.update', $product->id) }}" method="POST" class="row g-3 needs-validation @if($errors->any()) was-validated @endif" novalidate>
+            <form action="{{ route('products.update', $product->id) }}" method="POST" class="row g-3">
                 @csrf
                 @method('PUT')
                 <div class="col-12 required">
                   <label for="supplier" class="form-label">Supplier</label>
-                  <select class="form-select" name="supplier_id" aria-label="Select supplier" required>
-                    <option value="" selected>-- Choose Supplier --</option>
+                  <select class="form-select @error('supplier_id') is-invalid @enderror" name="supplier_id" aria-label="Select supplier">
+                    <option value="">-- Choose Supplier --</option>
                     @foreach($suppliers as $supplier)
-                      <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                      <option @if($supplier->id == $product->supplier->id) selected @endif value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                     @endforeach
                   </select>
                     @error('supplier_id')
@@ -41,7 +41,7 @@
 
                 <div class="col-12 required">
                   <label for="name" class="form-label">Name</label>
-                  <input type="text" class="form-control" value="{{ $product->name }}" name="name" id="name" placeholder="ex: Laptop" required>
+                  <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ $product->name }}" name="name" id="name" placeholder="e.g., Laptop">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -49,16 +49,16 @@
                 
                 <div class="col-12">
                   <label for="description" class="form-label">Description</label>
-                  <textarea name="description" class="form-control" id="description" rows="5" placeholder="ex: Thinkpad T480 TS">{{ $product->description }}</textarea>
+                  <textarea name="description" class="form-control" id="description" rows="5" placeholder="e.g., e.g., Original product with official guarantee or Lenovo Thinkpad">{{ $product->description }}</textarea>
                 </div>
 
                 <div class="col-12 required">
                   <label for="price" class="form-label">Price</label>
-                  <div class="input-group @error('price') has-validation @enderror">
+                  <div class="input-group has-validation">
                     <span class="input-group-text">Rp.</span>
-                    <input type="text" class="form-control rupiah-number" placeholder="3.000.000" required>
+                    <input type="text" class="form-control rupiah-number @error('price') is-invalid @enderror" placeholder="e.g., 5.300.000">
                     <span class="input-group-text">,</span>
-                    <input type="text" class="form-control rupiah-decimal" placeholder="00" required>
+                    <input type="text" class="form-control rupiah-decimal @error('price') is-invalid @enderror" placeholder="e.g., 00">
                     <input type="hidden" class="rupiah-hidden" value="{{ $product->price }}" name="price">
                       @error('price')
                           <div class="invalid-feedback">{{ $message }}</div>
