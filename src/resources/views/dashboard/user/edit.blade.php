@@ -23,20 +23,20 @@
           <div class="card-body">
             <h5 class="card-title">Form Edit User</h5>
 
-            <form id="formSupplier" action="{{ route('users.update', $user->id) }}" method="POST" class="row g-3 needs-validation @if($errors->any()) was-validated @endif" novalidate>
+            <form id="formSupplier" action="{{ route('users.update', $user->id) }}" method="POST" class="row g-3">
                 @csrf
                 @method('PUT')
                 <div class="col-12 required">
-                  <label for="name" class="form-label">Name</label>
-                  <input type="text" class="form-control" value="{{ $user->name }}" name="name" id="name" placeholder="Jasen" required>
-                    @error('name')
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" class="form-control @error('username') is-invalid @enderror" value="{{ $user->username }}" name="username" id="username" placeholder="e.g., user123">
+                    @error('username')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="col-12 required">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" value="{{ $user->email }}" id="email" name="email" placeholder="test@example.com" required>
+                  <input type="email" class="form-control @error('email') is-invalid @enderror" value="{{ $user->email }}" id="email" name="email" placeholder="e.g., user@example.com">
                     @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -44,16 +44,15 @@
 
                 <div class="col-12">
                   <label for="password" class="form-label">New Password</label>
-                  <input type="password" class="form-control" id="password" name="password" placeholder="********">
+                  <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Your New password">
                     @error('password')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                @role('admin')
                 <div class="col-12 required">
                   <label for="role" class="form-label">Role</label>
-                  <select class="form-select" name="role" aria-label="Select Role" required>
+                  <select class="form-select @error('role') is-invalid @enderror" name="role" aria-label="Select Role">
                     <option value="" selected>-- Choose Role --</option>
                     @foreach($roles as $role)
                       <option value="{{ $role->name }}" @if($user->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
@@ -63,7 +62,6 @@
                       <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                @endrole
 
                 <div class="col-12">
                     <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
