@@ -25,12 +25,12 @@
 
             <!-- Table with stripped rows -->
             <div class="table-responsive">
-              <table class="table datatable">
+              <table class="table table-bordered table-striped table-hover datatable">
                 <thead>
                   <tr>
                     <th width="10%">No.</th>
                     <th width="30%">
-                      <b>N</b>ame
+                      <b>U</b>sername
                     </th>
                     <th width="30%">Email</th>
                     <th width="10%">Role</th>
@@ -41,24 +41,24 @@
                   @foreach($users as $user)
                       <tr>
                           <td>{{ $loop->iteration }}.</td>
-                          <td>{{ $user->name }}</td>
-                          <td>{{ $user->email }}</td>
+                          <td>{{ $user->username }}</td>
+                          <td class="text-primary">{{ $user->email }}</td>
                           <td>
                             @foreach($user->roles as $role)
                               @if($role->name == 'admin')
-                                <span class="badge bg-primary">{{ $role->name }}</span>
+                                <span class="badge bg-primary text-uppercase">{{ $role->name }}</span>
                               @elseif($role->name == 'staff')
-                                <span class="badge bg-success">{{ $role->name }}</span>
+                                <span class="badge bg-success text-uppercase">{{ $role->name }}</span>
                               @endif
                             @endforeach
                           </td>
                           <td>
                               <div class="btn-group" role="group" aria-label="Action button">
                                   <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Edit</a>
-                                  <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                  <form id="deleteForm" action="{{ route('users.destroy', $user->id) }}" method="POST">
                                     @csrf
                                     @method("DELETE")
-                                    <button type="submit" class="btn btn-danger d-inline rounded-0 rounded-end">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-delete d-inline rounded-0 rounded-end">Delete</button>
                                   </form>
                               </div>
                           </td>
