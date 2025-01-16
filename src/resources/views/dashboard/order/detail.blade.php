@@ -2,12 +2,12 @@
 
 @section('breadcrumbs')
 <div class="pagetitle">
-    <h1>Data Request</h1>
+    <h1>Data Order</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
         <li class="breadcrumb-item">Data</li>
-        <li class="breadcrumb-item">Request</li>
+        <li class="breadcrumb-item">Order</li>
         <li class="breadcrumb-item active">Detail</li>
       </ol>
     </nav>
@@ -21,35 +21,38 @@
 
          <!-- Card with header and footer -->
          <div class="card">
-            <div class="card-header">Deadline: {{ $request->deadline }} | Status : <span class="badge @if($request->status->name === "PENDING") bg-primary @elseif($request->status->name === "ACCEPT") bg-success @else bg-danger @endif">{{ $request->status }}</span></div>
+            <div class="card-header">Deadline: {{ $order->deadline }} | Status : <span class="text-uppercase badge @if($order->status->name === "PENDING") bg-primary @elseif($order->status->name === "ACCEPT") bg-success @else bg-danger @endif">{{ $order->status }}</span></div>
             <div class="card-body">
-              <h5 class="card-title">{{ $request->name }}</h5>
+              <h5 class="card-title">{{ $order->product->name }}</h5>
               Description: <br/>
-              {!! $request->description !!}
+              {!! $order->description ?? "no description" !!}
 
-              Quantity: {{ $request->quantity }}
+              User: {{ $order->user->username }} <br/>
+              Quantity: {{ $order->quantity }} <br/>
 
-              @if($request->status->name === "REJECT")
-              Rejection Reason : <br/>
-              {{ $request->rejection_reason }}
+              @if($order->note)
+              Note : <br/>
+              {{ $order->note }}
               @endif
             </div>
             <div class="card-footer d-flex justify-content-between">
-              <a href="{{ route('requests.index') }}" class="btn btn-secondary">Back</a>
+              <a href="{{ route('orders.index') }}" class="btn btn-secondary">Back</a>
+              @role('admin')
               <div class="status-container d-flex gap-2">
-                <form method="POST" action="{{ route('requests.status', $request->id) }}">
+                <form method="POST" action="{{ route('orders.status', $order->id) }}">
                     @csrf
                     @method("PATCH")
                     <input type="hidden" name="status" value="reject">
                     <button type="submit" class="btn btn-danger">REJECT</button>
                 </form>
-                <form method="POST" action="{{ route('requests.status', $request->id) }}">
+                <form method="POST" action="{{ route('orders.status', $order->id) }}">
                     @csrf
                     @method("PATCH")
                     <input type="hidden" name="status" value="accept">
                     <button type="submit" class="btn btn-success">ACCEPT</button>
                 </form>
               </div>
+              @endrole
             </div>
           </div><!-- End Card with header and footer -->
 
